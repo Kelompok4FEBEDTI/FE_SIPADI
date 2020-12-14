@@ -4,6 +4,7 @@ import './App.css';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import routes from './config/routes';
 import { isUserAuthenticated } from './utils/cookie';
+import { Header } from './components';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
@@ -22,6 +23,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 const App = () => {
   return (
     <BrowserRouter>
+      <Header />
       <Switch>
         {routes.map((route) => {
           if (route.isPublic) {

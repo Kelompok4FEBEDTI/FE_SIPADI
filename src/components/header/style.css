@@ -1,0 +1,22 @@
+.header{
+  padding: 20px;
+  background-color: var();
+}
+
+.navbar{
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-item{
+  color:black;
+  text-transform:capitalize;
+  text-decoration: none;
+  padding: 10px 10px;
+  border: 2px solid white;
+}
+
+.navbar-item:hover{
+  background-color: #16ACA5;
+  color: white;
+}
