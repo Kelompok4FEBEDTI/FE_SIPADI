@@ -5,7 +5,7 @@ import { TableTransaksi } from '../../components';
 const TransaksiParkir = () => {
   const [dataTransaksi, setDataTransaksi] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
     setLoading(true);
@@ -15,14 +15,15 @@ const TransaksiParkir = () => {
         setDataTransaksi(res);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
       })
       .finally(() => {
-        setLoading(true);
+        setLoading(false);
       });
   }, []);
   return (
     <div>
+      {error && <p>{error}</p>}
       <h3>Transaksi Parkir</h3>
       {loading ? <p>Loading...</p> : <TableTransaksi data={dataTransaksi} />}
     </div>
