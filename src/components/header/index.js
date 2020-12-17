@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav } from 'react-bootstrap';
+// import { Navbar, Nav } from 'react-bootstrap';
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  Nav,
+  NavItem,
+  NavLink,
+} from 'reactstrap';
 import { isUserAuthenticated, setCookie } from '../../utils/cookie';
+import { Logo } from '../../assets';
 import './style.css';
 
 const Logout = () => {
@@ -14,7 +23,18 @@ const Logout = () => {
 
   return (
     <>
-      <button onClick={hapusCookie} type="button" className="btn btn-danger">
+      <button
+        style={{
+          position: 'absolute',
+          right: '0',
+          marginRight: '10px',
+          top: '0',
+          marginTop: '6px',
+        }}
+        onClick={hapusCookie}
+        type="button"
+        className="btn btn-danger"
+      >
         Logout
       </button>
     </>
@@ -30,13 +50,18 @@ const Login = () => {
 };
 
 const Header = ({ isPenjaga, show }) => {
-  const listMenuMember = ['profilemember', 'myhistory', 'spotparkir'];
+  const listMenuMember = ['Profile Member', 'My History', 'Spot Parkir'];
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    return setIsOpen(!isOpen);
+  };
 
   const listMenuPenjaga = [
-    'homepenjagaparkir',
-    'transaksi',
-    'spotparkir',
-    'profilepenjagaparkir',
+    'Home Penjaga Parkir',
+    'Transaksi',
+    'Spot Parkir',
+    'Profile Penjaga Parkir',
   ];
 
   useEffect(() => {
@@ -46,8 +71,19 @@ const Header = ({ isPenjaga, show }) => {
   const RenderedA = ({ list }) => {
     return list.map((name) => {
       return (
-        <Link to={`/${name}`} key={name} style={{ textDecoration: 'none' }}>
-          <div className="nav-item">{name}</div>
+        <Link
+          to={`/${name.toLowerCase().replace(' ', '')}`}
+          key={name}
+          style={{ textDecoration: 'none' }}
+        >
+          <NavItem>
+            <NavLink
+              style={{ fontSize: '18px', fontWeight: 'bold' }}
+              href="/components/"
+            >
+              {name}
+            </NavLink>
+          </NavItem>
         </Link>
       );
     });
@@ -55,22 +91,22 @@ const Header = ({ isPenjaga, show }) => {
 
   const RenderNavbar = () => {
     return (
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">
-          {/* <img
-            alt=""
-            src="/logo.svg"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          /> */}
-          SiPaDi
-        </Navbar.Brand>
-        <Nav>
-          <RenderedA
-            list={isPenjaga !== true ? listMenuMember : listMenuPenjaga}
-          />
-        </Nav>
+      <Navbar color="light" light expand="md">
+        <Link to={isPenjaga ? '/homepenjagaparkir' : '/profilemember'}>
+          <img style={{ width: '130px' }} alt="brand" src={Logo} />
+        </Link>
+        <NavbarToggler onClick={toggle} />
+        <Collapse
+          isOpen={isOpen}
+          navbar
+          style={{ position: 'absolute', right: '0', marginRight: '120px' }}
+        >
+          <Nav className="mr-auto" navbar>
+            <RenderedA
+              list={isPenjaga !== true ? listMenuMember : listMenuPenjaga}
+            />
+          </Nav>
+        </Collapse>
         <div>{isUserAuthenticated() ? <Logout /> : <Login />}</div>
       </Navbar>
     );

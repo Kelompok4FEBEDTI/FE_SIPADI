@@ -25,7 +25,17 @@ const Home = () => {
     if (activeTab !== tab) setActiveTab(tab);
   };
   return (
-    <Container className="login">
+    <Container
+      style={{
+        margin: '0',
+        position: 'absolute',
+        top: '45%',
+        left: '50%',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+      className="login"
+    >
       {/* <Link to="/loginmember">Login Member</Link>
       <Link to="/loginpenjagaparkir">Login Penjaga Parkir</Link> */}
       <Nav tabs>
