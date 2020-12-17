@@ -26,4 +26,26 @@ const isUserAuthenticated = () => {
   return false;
 };
 
-export { isUserAuthenticated, getCookie, setCookie };
+const isPenjagaParkirToken = async () => {
+  // console.log('Panggil Penjaga');
+  if (getCookie('token')) {
+    const a = JSON.parse(getCookie('userData')).user_role;
+    if (a) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const isMemberToken = () => {
+  if (getCookie('token')) return true;
+  return false;
+};
+
+export {
+  isUserAuthenticated,
+  getCookie,
+  setCookie,
+  isPenjagaParkirToken,
+  isMemberToken,
+};

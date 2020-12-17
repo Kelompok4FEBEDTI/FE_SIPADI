@@ -1,7 +1,6 @@
 import {
   Home,
   HistoryParkirMember,
-  HomeMember,
   HomePenjagaParkir,
   LoginMember,
   LoginPenjagaParkir,
@@ -31,17 +30,17 @@ const routes = [
   {
     path: '/profilemember',
     component: ProfileMember,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/profilepenjagaparkir',
     component: ProfilePenjagaParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/myhistory',
     component: HistoryParkirMember,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/spotparkir',
@@ -49,19 +48,14 @@ const routes = [
     isPublic: true,
   },
   {
-    path: '/homemember',
-    component: HomeMember,
-    isPublic: true,
-  },
-  {
     path: '/transaksi',
     component: TransaksiParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/homepenjagaparkir',
     component: HomePenjagaParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/',

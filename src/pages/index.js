@@ -3,7 +3,6 @@ export { default as RegisterMember } from './register';
 export { default as LoginMember } from './loginMember';
 export { default as LoginPenjagaParkir } from './loginPenjagaParkir';
 export { default as HomePenjagaParkir } from './homePenjagaParkir';
-export { default as HomeMember } from './homeMember';
 export { default as HistoryParkirMember } from './historyParkirMember';
 export { default as ProfileMember } from './profileMember';
 export { default as ProfilePenjagaParkir } from './profilePenjagaParkir';
