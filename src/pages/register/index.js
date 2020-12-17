@@ -87,7 +87,7 @@ const RegisterMember = () => {
           xs={12}
           md={{}}
         >
-          <HeaderAuth />
+          <HeaderAuth hide />
           <p style={{ fontWeight: 'lighter' }}>Sign Up and Start Parking!</p>
           <Form onSubmit={handleRegisterSubmit}>
             <Form.Group controlId="formBasicEmail">

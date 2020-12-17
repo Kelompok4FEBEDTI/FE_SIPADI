@@ -20,6 +20,7 @@ const LoginPenjagaParkir = () => {
         const cookieUser = {
           username: res.nama,
           user_role: 'penjaga',
+          ID: res.ID,
         };
         setCookie('userData', JSON.stringify(cookieUser), 10000);
         setCookie('token', JSON.stringify(cookieToken), 10000);
@@ -60,7 +61,7 @@ const LoginPenjagaParkir = () => {
           xs={12}
           md={{}}
         >
-          <HeaderAuth />
+          <HeaderAuth hide />
           <div style={{ paddingLeft: '10px' }}>
             <p style={{ fontWeight: 'lighter' }}>
               Log In to Your SiPaDi Penjaga Parkir Account!

@@ -112,16 +112,7 @@ const Header = ({ isPenjaga, show }) => {
     );
   };
 
-  return (
-    <div>
-      {/* {show ? <RenderNavbar /> : (
-        <div>
-          <p>Haii</p>
-        </div>
-      )} */}
-      {show && <RenderNavbar />}
-    </div>
-  );
+  return <div>{show && <RenderNavbar />}</div>;
 };
 
 export default Header;
