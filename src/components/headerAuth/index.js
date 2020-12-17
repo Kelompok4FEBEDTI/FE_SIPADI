@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Logo } from '../../assets';
 
 const HeaderAuth = () => {
   return (
@@ -12,11 +13,11 @@ const HeaderAuth = () => {
       }}
     >
       <Col>
-        <a href="/">SiPadi Logo</a>
+        <img alt="logo" src={Logo} style={{ width: '130px' }} />
       </Col>
       <Col>
         <Row className="justify-content-md-end">
-          <Link to="/loginmember">Log In</Link>
+          {/* <Link to="/loginmember">Log In</Link> */}
           <Link to="/registermember" style={{ marginLeft: '20px' }}>
             Sign Up
           </Link>

@@ -1,9 +1,9 @@
 import {
-  Home,
+  Login,
   HistoryParkirMember,
   HomePenjagaParkir,
-  LoginMember,
-  LoginPenjagaParkir,
+  // LoginMember,
+  // LoginPenjagaParkir,
   ProfileMember,
   ProfilePenjagaParkir,
   RegisterMember,
@@ -12,21 +12,21 @@ import {
 } from '../pages';
 
 const routes = [
-  {
-    path: '/loginmember',
-    component: LoginMember,
-    isPublic: true,
-  },
+  // {
+  //   path: '/loginmember',
+  //   component: LoginMember,
+  //   isPublic: true,
+  // },
   {
     path: '/registermember',
     component: RegisterMember,
     isPublic: true,
   },
-  {
-    path: '/loginpenjagaparkir',
-    component: LoginPenjagaParkir,
-    isPublic: true,
-  },
+  // {
+  //   path: '/loginpenjagaparkir',
+  //   component: LoginPenjagaParkir,
+  //   isPublic: true,
+  // },
   {
     path: '/profilemember',
     component: ProfileMember,
@@ -45,7 +45,7 @@ const routes = [
   {
     path: '/spotparkir',
     component: SpotParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/transaksi',
@@ -59,7 +59,7 @@ const routes = [
   },
   {
     path: '/',
-    component: Home,
+    component: Login,
     isPublic: true,
   },
 ];

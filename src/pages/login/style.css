@@ -1,0 +1,15 @@
+.login {
+    width: fit-content !important;
+}
+
+.nav-tabs {
+    width: 800px;
+}
+
+.nav-link {
+    padding: 0;
+}
+
+.nav-item {
+    padding: 0;
+}
