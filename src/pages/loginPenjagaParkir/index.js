@@ -16,7 +16,10 @@ const LoginPenjagaParkir = () => {
       .loginPenjagaParkir(username, password)
       .then((res) => {
         const cookieToken = res.token;
-        const cookieUser = res.nama;
+        const cookieUser = {
+          username: res.nama,
+          user_role: 'penjaga',
+        };
         setCookie('userData', JSON.stringify(cookieUser), 10000);
         setCookie('token', JSON.stringify(cookieToken), 10000);
       })
@@ -27,7 +30,7 @@ const LoginPenjagaParkir = () => {
         setUsername('');
         setPassword('');
         setLoading(false);
-        window.location.replace('/');
+        window.location.replace('/homepenjagaparkir');
       });
     e.preventDefault();
   };

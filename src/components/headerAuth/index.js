@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const HeaderAuth = () => {
   return (
@@ -15,10 +16,10 @@ const HeaderAuth = () => {
       </Col>
       <Col>
         <Row className="justify-content-md-end">
-          <a href="/">Log In</a>
-          <a href="/" style={{ margin: '0 20px' }}>
+          <Link to="/loginmember">Log In</Link>
+          <Link to="/registermember" style={{ marginLeft: '20px' }}>
             Sign Up
-          </a>
+          </Link>
         </Row>
       </Col>
     </Row>

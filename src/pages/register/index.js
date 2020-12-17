@@ -7,7 +7,7 @@ import { HeaderAuth, Loading } from '../../components';
 const RegisterMember = () => {
   const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
-  const [jenisKelamin, setJenisKelamin] = useState('');
+  const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
@@ -19,6 +19,7 @@ const RegisterMember = () => {
     authService
       .registerMember(username, password, nama, nik, jenisKelamin)
       .then((res) => {
+        console.log('Hello Iklas 2 ', res);
         setSuccess(res.data);
       })
       .catch((err) => {
@@ -51,9 +52,9 @@ const RegisterMember = () => {
       {success && (
         <div>
           <Alert onClick={hideError} variant="success">
-            Congratulation
-            {success}
-            ! Succes Register Account!
+            {`Congratulation
+            ${success}
+            ! Succes Register Account!`}
             <Link to="/loginmember">Click here to Login!</Link>
           </Alert>
         </div>
@@ -117,13 +118,13 @@ const RegisterMember = () => {
               {/* <Form.Label>State</Form.Label> */}
               <Form.Control
                 as="select"
-                defaultValue="Man"
+                defaultValue="Choose Gender . . ."
                 value={jenisKelamin}
                 onChange={(e) => {
                   setJenisKelamin(e.target.value);
                 }}
               >
-                <option disabled>Gender . . .</option>
+                <option disabled>Choose Gender . . .</option>
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
               </Form.Control>

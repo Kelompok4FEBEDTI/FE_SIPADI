@@ -20,7 +20,7 @@ const createAxiosInterceptor = (url) => {
   });
   axiosCreate.interceptors.response.use(
     (response) => {
-      console.log('response 1 :', response);
+      console.log('Hello Iklas ', response);
       return response.data;
     },
     (error) => {
