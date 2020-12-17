@@ -170,11 +170,15 @@ const RegisterMember = () => {
           className="d-flex justify-content-center align-items-center"
           style={{ padding: '0', margin: '0' }}
         >
-          <img
-            style={{ width: '570px', height: '550px' }}
-            alt="gambar login"
-            src={GambarRegister}
-          />
+          {GambarRegister ? (
+            <img
+              style={{ width: '570px', height: '550px' }}
+              alt="gambar login"
+              src={GambarRegister}
+            />
+          ) : (
+            <Loading />
+          )}
         </Col>
       </Row>
     </Container>
