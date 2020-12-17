@@ -3,11 +3,12 @@ import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { authService } from '../../services';
 import { HeaderAuth, Loading } from '../../components';
+import { GambarRegister } from '../../assets';
 
 const RegisterMember = () => {
   const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
-  const [jenisKelamin, setJenisKelamin] = useState('');
+  const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
@@ -19,6 +20,7 @@ const RegisterMember = () => {
     authService
       .registerMember(username, password, nama, nik, jenisKelamin)
       .then((res) => {
+        console.log('Hello Iklas 2 ', res);
         setSuccess(res.data);
       })
       .catch((err) => {
@@ -40,7 +42,18 @@ const RegisterMember = () => {
   };
 
   return (
-    <Container>
+    <Container
+      style={{
+        paddingRight: '0',
+        width: 'fit-content',
+        margin: '0',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
       {error && (
         <div>
           <Alert onClick={hideError} variant="danger">
@@ -51,23 +64,31 @@ const RegisterMember = () => {
       {success && (
         <div>
           <Alert onClick={hideError} variant="success">
-            Congratulation
-            {success}
-            ! Succes Register Account!
+            {`Congratulation
+            ${success}
+            ! Succes Register Account!`}
             <Link to="/loginmember">Click here to Login!</Link>
           </Alert>
         </div>
       )}
       {loading && <Loading />}
-
-      <Row style={{ marginBottom: '40px' }}>
+      <Row
+        style={{
+          border: '1px solid lightgray',
+        }}
+      >
         <Col
-          style={{ backgroundColor: '#FFFF34', paddingBottom: '20px' }}
+          style={{
+            backgroundColor: 'white',
+            paddingBottom: '20px',
+            paddingLeft: '25px',
+            maxWidth: '400px',
+          }}
           xs={12}
-          md={{ span: 5, offset: 7 }}
+          md={{}}
         >
           <HeaderAuth />
-          <p>Sign Up and Start Parking!</p>
+          <p style={{ fontWeight: 'lighter' }}>Sign Up and Start Parking!</p>
           <Form onSubmit={handleRegisterSubmit}>
             <Form.Group controlId="formBasicEmail">
               {/* <Form.Label>Username</Form.Label> */}
@@ -117,13 +138,13 @@ const RegisterMember = () => {
               {/* <Form.Label>State</Form.Label> */}
               <Form.Control
                 as="select"
-                defaultValue="Man"
+                defaultValue="Choose Gender . . ."
                 value={jenisKelamin}
                 onChange={(e) => {
                   setJenisKelamin(e.target.value);
                 }}
               >
-                <option disabled>Gender . . .</option>
+                <option disabled>Choose Gender . . .</option>
                 <option value="Man">Man</option>
                 <option value="Woman">Woman</option>
               </Form.Control>
@@ -142,6 +163,18 @@ const RegisterMember = () => {
               Sign Up
             </Button>
           </Form>
+        </Col>
+        <Col
+          xs={12}
+          md={{}}
+          className="d-flex justify-content-center align-items-center"
+          style={{ padding: '0', margin: '0' }}
+        >
+          <img
+            style={{ width: '570px', height: '550px' }}
+            alt="gambar login"
+            src={GambarRegister}
+          />
         </Col>
       </Row>
     </Container>

@@ -1,10 +1,9 @@
 import {
-  Home,
+  Login,
   HistoryParkirMember,
-  HomeMember,
   HomePenjagaParkir,
-  LoginMember,
-  LoginPenjagaParkir,
+  // LoginMember,
+  // LoginPenjagaParkir,
   ProfileMember,
   ProfilePenjagaParkir,
   RegisterMember,
@@ -13,59 +12,54 @@ import {
 } from '../pages';
 
 const routes = [
-  {
-    path: '/loginmember',
-    component: LoginMember,
-    isPublic: true,
-  },
+  // {
+  //   path: '/loginmember',
+  //   component: LoginMember,
+  //   isPublic: true,
+  // },
   {
     path: '/registermember',
     component: RegisterMember,
     isPublic: true,
   },
-  {
-    path: '/loginpenjagaparkir',
-    component: LoginPenjagaParkir,
-    isPublic: true,
-  },
+  // {
+  //   path: '/loginpenjagaparkir',
+  //   component: LoginPenjagaParkir,
+  //   isPublic: true,
+  // },
   {
     path: '/profilemember',
     component: ProfileMember,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/profilepenjagaparkir',
     component: ProfilePenjagaParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/myhistory',
     component: HistoryParkirMember,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/spotparkir',
     component: SpotParkir,
-    isPublic: true,
-  },
-  {
-    path: '/homemember',
-    component: HomeMember,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/transaksi',
     component: TransaksiParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/homepenjagaparkir',
     component: HomePenjagaParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/',
-    component: Home,
+    component: Login,
     isPublic: true,
   },
 ];

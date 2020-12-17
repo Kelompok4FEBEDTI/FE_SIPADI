@@ -3,8 +3,9 @@ import React from 'react';
 import './App.css';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import routes from './config/routes';
-import { isUserAuthenticated } from './utils/cookie';
+import { isUserAuthenticated, isPenjagaParkirToken } from './utils/cookie';
 import { Header } from './components';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
@@ -14,7 +15,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         if (isUserAuthenticated()) {
           return <Component />;
         }
-        return <Redirect to="/login" />;
+        return <Redirect to="/loginmember" />;
       }}
     />
   );
@@ -23,7 +24,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 const App = () => {
   return (
     <BrowserRouter>
-      <Header />
+      <Header isPenjaga={isPenjagaParkirToken()} show={isUserAuthenticated()} />
       <Switch>
         {routes.map((route) => {
           if (route.isPublic) {
