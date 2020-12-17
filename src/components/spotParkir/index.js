@@ -12,7 +12,7 @@ const ListSpotParkir = ({ data, index }) => {
   );
 };
 
-const SpotParkirComponent = (data) => {
+const SpotParkirComponent = ({ data }) => {
   return (
     <Table striped bordered hover>
       <thead>

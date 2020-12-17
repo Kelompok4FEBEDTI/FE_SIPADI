@@ -14,4 +14,8 @@ export default {
   MOBIL_BY_MEMBER_ID: (id) => {
     return `/member/${id}/mobil`;
   },
+  PENJAGA: '/penjaga',
+  PENJAGA_BY_ID: (id) => {
+    return `/penjaga/${id}`;
+  },
 };
