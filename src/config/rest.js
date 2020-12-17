@@ -1,7 +1,7 @@
 export default {
-  LOGIN_MEMBER: '/loginmember',
-  LOGIN_PENJAGA_PARKIR: '/loginpenjagaparkir',
-  REGISTER_MEMBER: '/registermember',
+  LOGIN_MEMBER: '/auth/login',
+  LOGIN_PENJAGA_PARKIR: '/auth/loginPenjaga',
+  REGISTER_MEMBER: '/member',
   SHOW_SPOT_PARKIR: '/spotparkir',
   TRANSAKSI_PARKIR: '/transaksi',
   TRANSAKSI_PARKIR_BY_ID: (id) => {

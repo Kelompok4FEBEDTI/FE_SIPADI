@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { spotParkirService } from '../../services';
-import { SpotParkirComponent } from '../../components';
+import { SpotParkirComponent, Loading } from '../../components';
 
 const SpotParkir = () => {
   const [data, setData] = useState([]);
@@ -20,11 +20,7 @@ const SpotParkir = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [data]);
-
-  const renderLoading = () => {
-    return <p>Loading . . .</p>;
-  };
+  }, []);
 
   const renderError = () => {
     return <p>{error}</p>;
@@ -33,13 +29,9 @@ const SpotParkir = () => {
   return (
     <div>
       <h3>Spot Parkir</h3>
-      {loading && renderLoading}
+      {loading && Loading}
       {error && renderError}
-      {data ?
-        data.map((e) => {
-            return <SpotParkirComponent data={e} />;
-          }) :
-        'Data Kosong'}
+      {data ? <SpotParkirComponent data={data} /> : ''}
     </div>
   );
 };

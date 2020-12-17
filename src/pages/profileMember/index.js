@@ -4,18 +4,17 @@ import { memberService } from '../../services';
 const ProfileMember = () => {
   const [dataMember, setDataMember] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState();
+  const [error, setError] = useState();
+
   useEffect(() => {
     setLoading(true);
     memberService
       .viewMember()
       .then((res) => {
         setDataMember(res);
-        console.log(res);
       })
       .catch((err) => {
-        // setError(err);
-        console.log(err);
+        setError(err);
       })
       .finally(() => {
         setLoading(false);
@@ -23,9 +22,18 @@ const ProfileMember = () => {
   }, []);
   return (
     <div>
-      {/* {error && <p>{error}</p>} */}
+      {error && <p>{error}</p>}
       <h3>Profile Member</h3>
-      {loading ? <p>Loading...</p> : <p>{dataMember.nama_member}</p>}
+      {loading && <p>Loading...</p>}
+      {dataMember.map((e, index) => {
+        return (
+          <p>
+            {index + 1}
+            .
+            {e.username_member}
+          </p>
+        );
+      })}
     </div>
   );
 };
