@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table } from 'react-bootstrap';
+import { Container, Table, Button } from 'react-bootstrap';
 import { Avatar } from 'antd';
 import 'antd/dist/antd.css';
 import { UserOutlined } from '@ant-design/icons';
 import { memberService } from '../../services';
 import { EditFormMemberModals, Loading } from '../../components';
+import { getCookie } from '../../utils/cookie';
 
 const ProfileMember = () => {
   const [dataMember, setDataMember] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
+  const memberData = JSON.parse(getCookie('userData'));
+
   useEffect(() => {
     setLoading(true);
     memberService
-      .viewMember()
+      .viewMemberByID(memberData.ID)
       .then((res) => {
-        setDataMember(res[0]);
+        setDataMember(res);
         // console.log(res[0]);
       })
       .catch((err) => {
@@ -36,7 +39,7 @@ const ProfileMember = () => {
         border: '1px solid darkgray',
         margin: '0',
         position: 'absolute',
-        maxWidth: '600px',
+        maxWidth: '500px',
         top: '50%',
         left: '50%',
         marginRight: '-50%',
@@ -52,7 +55,7 @@ const ProfileMember = () => {
             margin: '20px',
           }}
         >
-          <EditFormMemberModals />
+          <EditFormMemberModals data={dataMember} />
           <Avatar
             size={180}
             style={{ backgroundColor: 'darkCyan' }}
@@ -87,6 +90,13 @@ const ProfileMember = () => {
                       </tr>
                     );
                   })}
+                  <tr>
+                    <td />
+                    <td />
+                    <td>
+                      <Button type="button">Add</Button>
+                    </td>
+                  </tr>
                 </tbody>
               </Table>
             )}

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'antd';
 import { Form } from 'react-bootstrap';
 
-const EditFormMemberModals = () => {
+const EditFormMemberModals = ({ data }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
   const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  //   const [password, setPassword] = useState('');
 
   const showModal = () => {
     setVisible(true);
@@ -25,6 +25,10 @@ const EditFormMemberModals = () => {
 
   const handleCancel = () => {
     setVisible(false);
+    console.log(nik);
+    console.log(nama);
+    console.log(jenisKelamin);
+    console.log(username);
   };
 
   return (
@@ -74,7 +78,7 @@ const EditFormMemberModals = () => {
               <Form.Control
                 type="text"
                 placeholder="Full Name"
-                value={nama}
+                value={data.nama_member}
                 onChange={(e) => {
                   setNama(e.target.value);
                 }}
@@ -84,17 +88,18 @@ const EditFormMemberModals = () => {
               <Form.Control
                 type="text"
                 placeholder="NIK"
-                value={nik}
+                value={data.nik_member}
                 onChange={(e) => {
                   setNik(e.target.value);
                 }}
+                readOnly
               />
             </Form.Group>
             <Form.Group controlId="formGridState">
               <Form.Control
                 as="select"
                 defaultValue="Choose Gender . . ."
-                value={jenisKelamin}
+                value={data.jeniskelamin_member}
                 onChange={(e) => {
                   setJenisKelamin(e.target.value);
                 }}
@@ -108,22 +113,22 @@ const EditFormMemberModals = () => {
               <Form.Control
                 type="text"
                 placeholder="Username"
-                value={username}
+                value={data.username_member}
                 onChange={(e) => {
                   setUsername(e.target.value);
                 }}
               />
             </Form.Group>
-            <Form.Group controlId="formBasicPassword">
+            {/* <Form.Group controlId="formBasicPassword">
               <Form.Control
                 type="password"
                 placeholder="Password"
-                value={password}
+                value={data.password_member}
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
               />
-            </Form.Group>
+            </Form.Group> */}
             {/* <Button
               style={{
                 backgroundColor: '#16D9D0',
