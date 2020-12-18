@@ -5,10 +5,11 @@ import { Avatar } from 'antd';
 import 'antd/dist/antd.css';
 import { UserOutlined } from '@ant-design/icons';
 import { memberService } from '../../services';
+import './style.css';
 import {
   EditFormMemberModals,
-  Loading,
   AddFormMobilModals,
+  Loading,
 } from '../../components';
 import { getCookie } from '../../utils/cookie';
 
@@ -16,6 +17,7 @@ const ProfileMember = () => {
   const [dataMember, setDataMember] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
+  const [message, setMessage] = useState(false);
 
   const memberData = JSON.parse(getCookie('userData'));
 
@@ -33,18 +35,16 @@ const ProfileMember = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [memberData]);
 
   const deleteMobil = (idMobil) => {
-    console.log('delete');
     memberService
       .deleteMobilByID(idMobil)
       .then((res) => {
-        console.log(res);
-        window.location.replace('/profilemember');
+        setMessage(`Data mobil si ${res.nama_member} berhasil di hapus.`);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
       });
   };
 
@@ -65,6 +65,7 @@ const ProfileMember = () => {
       }}
     >
       {error && <p>{error}</p>}
+      {message && <p>{message}</p>}
       {/* {loading && <p>Loading...</p>} */}
       {dataMember && !loading ? (
         <div
@@ -123,7 +124,6 @@ const ProfileMember = () => {
                 </thead>
                 <tbody>
                   {dataMember.mobil.map((data, index) => {
-                    console.log(`${data._id}`);
                     return (
                       <tr>
                         <td>{index + 1}</td>
