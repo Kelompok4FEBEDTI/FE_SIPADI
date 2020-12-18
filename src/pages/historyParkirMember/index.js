@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Container } from 'react-bootstrap';
 
 // Disini ngeget transaksi by idmember
 // "_id": "5fdbc922767645001702f5c0",
@@ -69,20 +69,34 @@ const HistoryParkirMember = () => {
   ];
 
   return (
-    <div>
-      <h3>HistoryParkirMember</h3>
+    <Container
+      style={{
+        backgroundColor: 'unset',
+        margin: '0',
+        position: 'absolute',
+        maxWidth: '1000px',
+        top: '50%',
+        left: '50%',
+        padding: '0',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        border: '1px solid darkgray',
+        // overflow: 'scroll'
+      }}
+    >
       {dummy && (
         <div
           style={{
-            padding: '20px',
-            margin: '20px',
-            border: '2px solid green',
+            padding: '0',
+            margin: '0',
+            // border: '2px solid green',
           }}
         >
-          <Table striped bordered hover>
+          <Table striped hover className="text-center">
             <thead>
               <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>Tanggal</th>
                 <th>Nama</th>
                 <th>No Kendaraan</th>
@@ -98,6 +112,7 @@ const HistoryParkirMember = () => {
                 return (
                   <tr>
                     <td>{index + 1}</td>
+                    <td>ACTION</td>
                     <td>{data.tanggal}</td>
                     <td>{data.nama}</td>
                     <td>{data.no_kendaraan}</td>
@@ -113,7 +128,7 @@ const HistoryParkirMember = () => {
           </Table>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

@@ -51,7 +51,6 @@ const LoginMembeR = () => {
           </Alert>
         </div>
       )}
-      {loading && <Loading />}
       <Row>
         <Col
           style={{
@@ -115,6 +114,20 @@ const LoginMembeR = () => {
           />
         </Col>
       </Row>
+      {loading && (
+        <div
+          style={{
+            margin: '0',
+            position: 'absolute',
+            top: '45%',
+            left: '50%',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Loading />
+        </div>
+      )}
     </Container>
   );
 };
