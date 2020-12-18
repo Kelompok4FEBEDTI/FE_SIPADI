@@ -1,9 +1,9 @@
 .login {
-    width: fit-content !important;
+    width: 800px !important;
 }
 
 .nav-tabs {
-    width: 800px;
+    max-width: 800px;
 }
 
 .nav-item {

@@ -22,6 +22,7 @@ const RegisterMember = () => {
       .then((res) => {
         console.log('Hello Iklas 2 ', res);
         setSuccess(res.data);
+        window.location.replace('/');
       })
       .catch((err) => {
         setError(err.message);

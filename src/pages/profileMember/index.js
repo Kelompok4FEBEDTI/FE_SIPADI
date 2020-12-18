@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, Table, Form } from 'react-bootstrap';
+import { Container, Button, Table, Form } from 'react-bootstrap';
+import { Avatar } from 'antd';
+import 'antd/dist/antd.css';
 import { memberService } from '../../services';
 
 const ProfileMember = () => {
@@ -40,22 +42,28 @@ const ProfileMember = () => {
   };
 
   return (
-    <div
+    <Container
       style={{
         display: 'flex',
-        justifyContent: 'center',
+        textAlign: 'center',
         flexDirection: 'column',
+        border: '1px solid darkgray',
+        margin: '0',
+        position: 'absolute',
+        maxWidth: '600px',
+        top: '50%',
+        left: '50%',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       {error && <p>{error}</p>}
-      <h3>Profile Member</h3>
       {loading && <p>Loading...</p>}
       {formEdit && (
         <div
           style={{
             padding: '20px',
             margin: '20px',
-            border: '2px solid green',
           }}
         >
           <Form onSubmit={handleEditFormSubmit}>
@@ -136,19 +144,29 @@ const ProfileMember = () => {
           style={{
             padding: '20px',
             margin: '20px',
-            border: '2px solid green',
           }}
         >
-          <Button onClick={handleEditButton} variant="info">
+          <Button
+            style={{
+              position: 'absolute',
+              right: '0',
+              marginRight: '20px',
+              top: '0',
+              marginTop: '20px',
+            }}
+            onClick={handleEditButton}
+            variant="info"
+          >
             Edit
           </Button>
-          <div
+          <Avatar size={180}>MEMBER</Avatar>
+          {/* <div
             style={{
               width: '171px',
               height: '180px',
               overflow: 'hidden',
             }}
-          >
+            >
             <Image
               src="https://i.ibb.co/tP09Rvf/undraw-profile-pic-ic5t.png"
               roundedCircle
@@ -158,8 +176,8 @@ const ProfileMember = () => {
                 boxShadow: '1px 1px 10px rgba(0,0,0,0.5)',
               }}
             />
-          </div>
-          <div>
+          </div> */}
+          <div style={{ marginTop: '20px' }}>
             <p>{`NIK : ${dataMember.nik_member}`}</p>
             <p>{`Nama : ${dataMember.username_member}`}</p>
           </div>
@@ -189,7 +207,7 @@ const ProfileMember = () => {
           </div>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

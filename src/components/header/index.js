@@ -50,6 +50,7 @@ const Login = () => {
 };
 
 const Header = ({ isPenjaga, show }) => {
+  console.log(isPenjaga);
   const listMenuMember = ['Profile Member', 'My History', 'Spot Parkir'];
   const [isOpen, setIsOpen] = useState(false);
 

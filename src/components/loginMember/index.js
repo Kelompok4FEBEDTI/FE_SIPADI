@@ -32,7 +32,7 @@ const LoginMembeR = () => {
         setPassword('');
         setLoading(false);
         if (!error) {
-          window.location.replace('/');
+          window.location.replace('/profilemember');
         }
       });
     e.preventDefault();

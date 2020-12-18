@@ -26,8 +26,7 @@ const isUserAuthenticated = () => {
   return false;
 };
 
-const isPenjagaParkirToken = async () => {
-  // console.log('Panggil Penjaga');
+const isPenjagaParkirToken = () => {
   if (getCookie('token')) {
     const a = JSON.parse(getCookie('userData')).user_role;
     if (a) {
