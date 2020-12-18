@@ -50,7 +50,6 @@ const Login = () => {
 };
 
 const Header = ({ isPenjaga, show }) => {
-  console.log(isPenjaga);
   const listMenuMember = ['Profile Member', 'My History', 'Spot Parkir'];
   const [isOpen, setIsOpen] = useState(false);
 
@@ -73,13 +72,13 @@ const Header = ({ isPenjaga, show }) => {
     return list.map((name) => {
       return (
         <Link
-          to={`/${name.toLowerCase().replace(' ', '')}`}
+          to={`/${name.toLowerCase().replace(' ', '').replace(' ', '')}`}
           key={name}
           style={{ textDecoration: 'none' }}
         >
           <NavItem>
             <NavLink
-              style={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}
+              style={{ fontSize: '18px', color: 'black' }}
               href="/components/"
             >
               {name}
@@ -92,7 +91,7 @@ const Header = ({ isPenjaga, show }) => {
 
   const RenderNavbar = () => {
     return (
-      <Navbar color="light" light expand="md">
+      <Navbar style={{ backgroundColor: 'white' }} color="white" expand="md">
         <Link to={isPenjaga ? '/homepenjagaparkir' : '/profilemember'}>
           <img style={{ width: '130px' }} alt="brand" src={Logo} />
         </Link>

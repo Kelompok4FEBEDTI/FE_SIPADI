@@ -1,5 +1,9 @@
 body {
-  background-color: #f5f5f5;
+  background-color: #f5f5f5 !important;
+}
+
+.container {
+  background-color: white;
 }
 
 .App {

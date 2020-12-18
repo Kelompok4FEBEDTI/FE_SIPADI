@@ -5,7 +5,7 @@ import {
   spotParkirService,
   penjagaService,
   memberService,
-  transaksiParkirService,
+  // transaksiParkirService,
 } from '../../services';
 import func from '../../utils/baseFunction';
 import { getCookie } from '../../utils/cookie';
@@ -52,7 +52,6 @@ const TransaksiMasuk = () => {
         .viewMemberByNopol(nopol)
         .then((res) => {
           setInfoMember(res[0]);
-          console.log(res[0]);
           setMobil(
             res[0].mobil.filter((x) => {
               return x.nomor_polisi === nopol;
@@ -74,8 +73,8 @@ const TransaksiMasuk = () => {
           console.log(err);
         });
     }
-    setPetugas(selectedSlot);
-    setInfoMember(infoMember);
+    setPetugas('');
+    setInfoMember('');
     setMobil();
     setTanggal('');
     setJamMasuk('');
@@ -84,29 +83,31 @@ const TransaksiMasuk = () => {
 
   const onsubmitMasuk = () => {
     // setLoading(true);
-    const data = JSON.stringify({
-      id_penjaga: dataPetugas.ID,
-      id_member: infoMember.nik,
-      nomor_polisi: nopol,
-      jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
-      status_parkir: 'Sudah Parkir',
-      spot_parkir: selectedSlot,
-      jam_masuk: jamMasuk,
-      jam_keluar: '-',
-      tarif: 0,
-    });
-    console.log(data);
-    transaksiParkirService
-      .addTransaksiParkir(data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        // setLoading(false);
-      });
+    console.log('TEST');
+    console.log(selectedSlot);
+    // const data = {
+    //   id_penjaga: dataPetugas.ID,
+    //   id_member: infoMember.nik,
+    //   nomor_polisi: nopol,
+    //   jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
+    //   status_parkir: 'Sudah Parkir',
+    //   spot_parkir: selectedSlot,
+    //   jam_masuk: jamMasuk,
+    //   jam_keluar: '-',
+    //   tarif: 0,
+    // };
+    // console.log(data);
+    // transaksiParkirService
+    //   .addTransaksiParkir(data)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+    //   .finally(() => {
+    //     // setLoading(false);
+    //   });
   };
 
   return (
@@ -132,8 +133,8 @@ const TransaksiMasuk = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              <Form>
-                <Form.Group controlId="formBasicEmail">
+              <Form onSubmit={onsubmitMasuk}>
+                <Form.Group>
                   <Form.Control
                     type="text"
                     placeholder="Nomor Kendaraan"
@@ -144,7 +145,7 @@ const TransaksiMasuk = () => {
                     required
                   />
                 </Form.Group>
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group>
                   <Form.Control
                     type="text"
                     placeholder="Jenis Kendaraan"
@@ -152,7 +153,7 @@ const TransaksiMasuk = () => {
                     readOnly
                   />
                 </Form.Group>
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group>
                   <Form.Control
                     type="text"
                     placeholder="Nama Pemilik"
@@ -230,12 +231,15 @@ const TransaksiMasuk = () => {
                     }}
                     type="button"
                     disabled={loadingData}
+                    onClick={() => {
+                      setNopol('');
+                    }}
                   >
                     Cancel
                   </Button>
                 </Col>
                 <Col>
-                  <Button
+                  <input
                     style={{
                       backgroundColor: '#16D9D0',
                       border: '0',
@@ -243,11 +247,21 @@ const TransaksiMasuk = () => {
                       marginTop: '20px',
                     }}
                     type="submit"
-                    onClick={onsubmitMasuk()}
+                    value="Submit"
+                  />
+                  {/* <input
+                    style={{
+                      backgroundColor: '#16D9D0',
+                      border: '0',
+                      width: '100%',
+                      marginTop: '20px',
+                    }}
+                    type="submit"
+                    value="submit"
                     // disabled={loading}
                   >
                     Submit
-                  </Button>
+                  </input> */}
                 </Col>
               </Row>
             </div>

@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Logo } from '../../assets';
 
-const HeaderAuth = ({ hide }) => {
+const HeaderAuth = ({ hide, back }) => {
   return (
     <Row
       className="justify-content-md-beetween align-item-center"
@@ -21,6 +21,13 @@ const HeaderAuth = ({ hide }) => {
           {!hide ? (
             <Link to="/registermember" style={{ marginLeft: '20px' }}>
               Sign Up
+            </Link>
+          ) : (
+            <div />
+          )}
+          {back ? (
+            <Link style={{ marginRight: '20px' }} to="/">
+              Log In
             </Link>
           ) : (
             <div />

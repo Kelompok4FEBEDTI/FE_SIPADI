@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Table, Form } from 'react-bootstrap';
+import { Container, Table } from 'react-bootstrap';
 import { Avatar } from 'antd';
 import 'antd/dist/antd.css';
+import { UserOutlined } from '@ant-design/icons';
 import { memberService } from '../../services';
+import { EditFormMemberModals, Loading } from '../../components';
 
 const ProfileMember = () => {
   const [dataMember, setDataMember] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
-  const [formEdit, setFormEdit] = useState();
-  const [nik, setNik] = useState('');
-  const [nama, setNama] = useState('');
-  const [jenisKelamin, setJenisKelamin] = useState('Man');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -30,16 +26,6 @@ const ProfileMember = () => {
         setLoading(false);
       });
   }, []);
-
-  const handleEditButton = () => {
-    setFormEdit(true);
-    // console.log('Edit Button Nihhhh');
-  };
-
-  const handleEditFormSubmit = () => {
-    // console.log('Berhasil Edit');
-    setFormEdit(false);
-  };
 
   return (
     <Container
@@ -58,132 +44,32 @@ const ProfileMember = () => {
       }}
     >
       {error && <p>{error}</p>}
-      {loading && <p>Loading...</p>}
-      {formEdit && (
+      {/* {loading && <p>Loading...</p>} */}
+      {dataMember && !loading ? (
         <div
           style={{
             padding: '20px',
             margin: '20px',
           }}
         >
-          <Form onSubmit={handleEditFormSubmit}>
-            <Form.Group controlId="formNama">
-              {/* <Form.Label>Password</Form.Label> */}
-              <Form.Control
-                type="text"
-                placeholder="Full Name"
-                value={nama}
-                onChange={(e) => {
-                  setNama(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="formNik">
-              {/* <Form.Label>Password</Form.Label> */}
-              <Form.Control
-                type="text"
-                placeholder="NIK"
-                value={nik}
-                onChange={(e) => {
-                  setNik(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="formGridState">
-              {/* <Form.Label>State</Form.Label> */}
-              <Form.Control
-                as="select"
-                defaultValue="Choose Gender . . ."
-                value={jenisKelamin}
-                onChange={(e) => {
-                  setJenisKelamin(e.target.value);
-                }}
-              >
-                <option disabled>Choose Gender . . .</option>
-                <option value="Man">Man</option>
-                <option value="Woman">Woman</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail">
-              {/* <Form.Label>Username</Form.Label> */}
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="formBasicPassword">
-              {/* <Form.Label>Password</Form.Label> */}
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Button
-              style={{
-                backgroundColor: '#16D9D0',
-                border: '0',
-                width: '100%',
-              }}
-              type="submit"
-            >
-              Edit
-            </Button>
-          </Form>
-        </div>
-      )}
-      {dataMember && (
-        <div
-          style={{
-            padding: '20px',
-            margin: '20px',
-          }}
-        >
-          <Button
-            style={{
-              position: 'absolute',
-              right: '0',
-              marginRight: '20px',
-              top: '0',
-              marginTop: '20px',
-            }}
-            onClick={handleEditButton}
-            variant="info"
-          >
-            Edit
-          </Button>
-          <Avatar size={180}>MEMBER</Avatar>
-          {/* <div
-            style={{
-              width: '171px',
-              height: '180px',
-              overflow: 'hidden',
-            }}
-            >
-            <Image
-              src="https://i.ibb.co/tP09Rvf/undraw-profile-pic-ic5t.png"
-              roundedCircle
-              style={{
-                width: 'inherit',
-                height: 'inherit',
-                boxShadow: '1px 1px 10px rgba(0,0,0,0.5)',
-              }}
-            />
-          </div> */}
+          <EditFormMemberModals />
+          <Avatar
+            size={180}
+            style={{ backgroundColor: 'darkCyan' }}
+            icon={<UserOutlined />}
+          />
           <div style={{ marginTop: '20px' }}>
             <p>{`NIK : ${dataMember.nik_member}`}</p>
             <p>{`Nama : ${dataMember.username_member}`}</p>
           </div>
           <div>
             {dataMember.mobil && (
-              <Table striped bordered hover>
+              <Table
+                style={{ maxHeight: '50px', overflow: 'scroll' }}
+                responsive
+                bordered
+                hover
+              >
                 <thead>
                   <tr>
                     <th>No</th>
@@ -206,6 +92,8 @@ const ProfileMember = () => {
             )}
           </div>
         </div>
+      ) : (
+        <Loading />
       )}
     </Container>
   );

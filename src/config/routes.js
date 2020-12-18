@@ -55,7 +55,7 @@ const routes = [
   {
     path: '/homepenjagaparkir',
     component: HomePenjagaParkir,
-    isPublic: true,
+    isPublic: false,
   },
   {
     path: '/',

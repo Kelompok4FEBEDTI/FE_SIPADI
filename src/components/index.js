@@ -8,3 +8,4 @@ export { default as LoginMember } from './loginMember';
 export { default as LoginPenjaga } from './loginPenjagaParkir';
 export { default as TransaksiMasuk } from './transaksiMasuk';
 export { default as TransaksiKeluar } from './transaksiKeluar';
+export { default as EditFormMemberModals } from './editFormMemberModals';
