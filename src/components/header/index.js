@@ -81,7 +81,11 @@ const Header = ({ isPenjaga, show }) => {
               style={{ fontSize: '18px', color: 'black' }}
               href="/components/"
             >
-              {name}
+              {name === 'Home Penjaga Parkir' ||
+              name === 'Profile Penjaga Parkir' ||
+              name === 'Profile Member' ?
+                name.split(' ')[0] :
+                name}
             </NavLink>
           </NavItem>
         </Link>

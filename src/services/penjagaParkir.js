@@ -14,11 +14,16 @@ const viewPenjagaByID = (id) => {
 };
 
 const editPenjagaByID = (id, data) => {
-  return BaseService.put(API.PENJAGA_BY_ID(id), { data });
+  return BaseService.put(API.PENJAGA_BY_ID(id), {
+    nik: data.nik,
+    nama: data.nama,
+    username: data.username,
+    password: data.password,
+  });
 };
 
 const deletePenjagaByID = (id) => {
-  return BaseService.del(API.MEMBER_BY_ID(id));
+  return BaseService.delete(API.MEMBER_BY_ID(id));
 };
 
 export default {

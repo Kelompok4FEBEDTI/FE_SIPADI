@@ -9,3 +9,5 @@ export { default as LoginPenjaga } from './loginPenjagaParkir';
 export { default as TransaksiMasuk } from './transaksiMasuk';
 export { default as TransaksiKeluar } from './transaksiKeluar';
 export { default as EditFormMemberModals } from './editFormMemberModals';
+export { default as EditFormPenjagaModals } from './editFormPenjagaModals';
+export { default as AddFormMobilModals } from './addFormMobilModals';

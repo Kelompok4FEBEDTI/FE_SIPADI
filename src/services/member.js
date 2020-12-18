@@ -18,15 +18,24 @@ const viewMemberByNopol = (nopol) => {
 };
 
 const editMemberById = (id, data) => {
-  return BaseService.put(API.MEMBER_BY_ID(id), { data });
+  return BaseService.put(API.MEMBER_BY_ID(id), {
+    nik_member: data.nik_member,
+    nama_member: data.nama_member,
+    jeniskelamin_member: data.jeniskelamin_member,
+    username_member: data.username_member,
+    password_member: data.password_member,
+  });
 };
 
 const viewAllMobilById = (id) => {
   return BaseService.get(API.MOBIL_BY_MEMBER_ID(id));
 };
 
-const addAllMobilById = (id, data) => {
-  return BaseService.post(API.MOBIL_BY_MEMBER_ID(id), { data });
+const addMobilById = (id, nomorPolisi, jenisMobil) => {
+  return BaseService.post(API.MOBIL_BY_MEMBER_ID(id), {
+    nomor_polisi: nomorPolisi,
+    jenis_mobil: jenisMobil,
+  });
 };
 
 const editMobilById = (id, data) => {
@@ -34,7 +43,11 @@ const editMobilById = (id, data) => {
 };
 
 const deleteMemberByID = (id) => {
-  return BaseService.del(API.MEMBER_BY_ID(id));
+  return BaseService.delete(API.MEMBER_BY_ID(id));
+};
+
+const deleteMobilByID = (id) => {
+  return BaseService.delete(API.MOBIL_BY_MEMBER_ID(id));
 };
 
 export default {
@@ -43,8 +56,9 @@ export default {
   viewMemberByID,
   editMemberById,
   viewAllMobilById,
-  addAllMobilById,
+  addMobilById,
   editMobilById,
   deleteMemberByID,
   viewMemberByNopol,
+  deleteMobilByID,
 };

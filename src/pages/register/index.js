@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { authService } from '../../services';
 import { HeaderAuth, Loading } from '../../components';
 import { GambarRegister } from '../../assets';
@@ -47,6 +46,7 @@ const RegisterMember = () => {
       style={{
         paddingRight: '0',
         width: 'fit-content',
+        height: 'fit-content',
         margin: '0',
         position: 'absolute',
         top: '50%',
@@ -68,11 +68,9 @@ const RegisterMember = () => {
             {`Congratulation
             ${success}
             ! Succes Register Account!`}
-            <Link to="/loginmember">Click here to Login!</Link>
           </Alert>
         </div>
       )}
-      {loading && <Loading />}
       <Row
         style={{
           border: '1px solid lightgray',
@@ -173,7 +171,7 @@ const RegisterMember = () => {
         >
           {GambarRegister ? (
             <img
-              style={{ width: '570px', height: '550px' }}
+              style={{ width: '550px', height: '550px' }}
               alt="gambar login"
               src={GambarRegister}
             />
@@ -182,6 +180,20 @@ const RegisterMember = () => {
           )}
         </Col>
       </Row>
+      {loading && (
+        <div
+          style={{
+            margin: '0',
+            position: 'absolute',
+            top: '45%',
+            left: '50%',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Loading />
+        </div>
+      )}
     </Container>
   );
 };

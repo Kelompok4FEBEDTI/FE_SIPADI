@@ -1,10 +1,15 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
-import { Container, Table, Button } from 'react-bootstrap';
+import { Container, Table, Button, Row, Col } from 'react-bootstrap';
 import { Avatar } from 'antd';
 import 'antd/dist/antd.css';
 import { UserOutlined } from '@ant-design/icons';
 import { memberService } from '../../services';
-import { EditFormMemberModals, Loading } from '../../components';
+import {
+  EditFormMemberModals,
+  Loading,
+  AddFormMobilModals,
+} from '../../components';
 import { getCookie } from '../../utils/cookie';
 
 const ProfileMember = () => {
@@ -29,6 +34,19 @@ const ProfileMember = () => {
         setLoading(false);
       });
   }, []);
+
+  const deleteMobil = (idMobil) => {
+    console.log('delete');
+    memberService
+      .deleteMobilByID(idMobil)
+      .then((res) => {
+        console.log(res);
+        window.location.replace('/profilemember');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <Container
@@ -62,15 +80,37 @@ const ProfileMember = () => {
             icon={<UserOutlined />}
           />
           <div style={{ marginTop: '20px' }}>
-            <p>{`NIK : ${dataMember.nik_member}`}</p>
-            <p>{`Nama : ${dataMember.username_member}`}</p>
+            <Row className="ket">
+              <Col style={{ textAlign: 'end' }} md={{ span: 5 }}>
+                NIK
+              </Col>
+              <Col>:</Col>
+              <Col style={{ textAlign: 'left' }} md={5}>
+                {dataMember.nik_member}
+              </Col>
+            </Row>
+            <Row className="ket">
+              <Col style={{ textAlign: 'end' }} md={{ span: 5 }}>
+                Nama
+              </Col>
+              <Col>:</Col>
+              <Col style={{ textAlign: 'left' }} md={5}>
+                {dataMember.nama_member}
+              </Col>
+            </Row>
+            {/* <p>{`NIK : ${dataMember.nik_member}`}</p>
+            <p>{`Nama : ${dataMember.nama_member}`}</p> */}
           </div>
           <div>
             {dataMember.mobil && (
               <Table
-                style={{ maxHeight: '50px', overflow: 'scroll' }}
+                style={{
+                  maxHeight: '50px',
+                  overflow: 'scroll',
+                  fontFamily: 'poppins',
+                }}
                 responsive
-                bordered
+                // bordered
                 hover
               >
                 <thead>
@@ -78,23 +118,40 @@ const ProfileMember = () => {
                     <th>No</th>
                     <th>No Polisi</th>
                     <th>Jenis Mobil</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dataMember.mobil.map((data, index) => {
+                    console.log(`${data._id}`);
                     return (
                       <tr>
                         <td>{index + 1}</td>
                         <td>{data.nomor_polisi}</td>
                         <td>{data.jenis_mobil}</td>
+                        <td>
+                          <Button
+                            type="button"
+                            variant="danger"
+                            onClick={() => {
+                              deleteMobil(data._id);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </td>
                       </tr>
                     );
                   })}
-                  <tr>
+                  <tr
+                    style={{
+                      borderTop: '1px solid darkgray',
+                    }}
+                  >
                     <td />
                     <td />
                     <td>
-                      <Button type="button">Add</Button>
+                      <AddFormMobilModals />
                     </td>
                   </tr>
                 </tbody>

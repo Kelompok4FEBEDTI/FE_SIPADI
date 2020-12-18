@@ -18,7 +18,7 @@ const editTransaksiParkirByID = (id, data) => {
 };
 
 const deleteTransaksiParkirById = (id) => {
-  return BaseService.del(API.TRANSAKSI_PARKIR_BY_ID(id));
+  return BaseService.delete(API.TRANSAKSI_PARKIR_BY_ID(id));
 };
 
 export default {

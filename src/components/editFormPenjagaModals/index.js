@@ -2,26 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { Form } from 'react-bootstrap';
 import { getCookie } from '../../utils/cookie';
-import { memberService } from '../../services';
+import { penjagaService } from '../../services';
 
-const EditFormMemberModals = ({ data }) => {
+const EditFormPenjagaModals = ({ data }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
-  const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const memberData = JSON.parse(getCookie('userData'));
+  const penjagaData = JSON.parse(getCookie('userData'));
   // console.log(data);
   // // data.mobil = [];
   // console.log('INI', data);
 
   useEffect(() => {
-    setNama(data.nama_member);
-    setUsername(data.username_member);
-    setJenisKelamin(data.jeniskelamin_member);
-    setPassword(data.password_member);
+    setNama(data.nama);
+    setUsername(data.username);
+    setPassword(data.password);
   }, []);
 
   const showModal = () => {
@@ -30,15 +28,14 @@ const EditFormMemberModals = ({ data }) => {
 
   const handleOk = () => {
     setLoading(true);
-    data.jeniskelamin_member = jenisKelamin;
-    data.nama_member = nama;
-    data.username_member = username;
+    data.nama = nama;
+    data.username = username;
     console.log(data);
-    memberService
-      .editMemberById(memberData.ID, data)
+    penjagaService
+      .editPenjagaByID(penjagaData.ID, data)
       .then((res) => {
         console.log(res);
-        window.location.replace('/profilemember');
+        window.location.replace('/profilepenjagaparkir');
       })
       .catch((err) => {
         console.log(err);
@@ -115,21 +112,6 @@ const EditFormMemberModals = ({ data }) => {
                 readOnly
               />
             </Form.Group>
-            <Form.Group controlId="formGridState">
-              <Form.Label>Jenis Kelamin</Form.Label>
-              <Form.Control
-                as="select"
-                defaultValue="Choose Gender . . ."
-                value={jenisKelamin}
-                onChange={(e) => {
-                  setJenisKelamin(e.target.value);
-                }}
-              >
-                <option disabled>Choose Gender . . .</option>
-                <option value="Man">Man</option>
-                <option value="Woman">Woman</option>
-              </Form.Control>
-            </Form.Group>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Username</Form.Label>
               <Form.Control
@@ -170,4 +152,4 @@ const EditFormMemberModals = ({ data }) => {
   );
 };
 
-export default EditFormMemberModals;
+export default EditFormPenjagaModals;
