@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Image, Table, Form } from 'react-bootstrap';
 import { memberService } from '../../services';
+import './style.css';
 
 const ProfileMember = () => {
   const [dataMember, setDataMember] = useState({});
