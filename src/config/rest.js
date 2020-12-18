@@ -11,6 +11,9 @@ export default {
   MEMBER_BY_ID: (id) => {
     return `/member/${id}`;
   },
+  MEMBER_BY_NOPOL: (nopol) => {
+    return `/member/getmemberbynopol/${nopol}`;
+  },
   MOBIL_BY_MEMBER_ID: (id) => {
     return `/member/${id}/mobil`;
   },

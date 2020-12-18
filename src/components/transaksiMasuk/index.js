@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
-import { spotParkirService, penjagaService } from '../../services';
+import {
+  spotParkirService,
+  penjagaService,
+  memberService,
+  transaksiParkirService,
+} from '../../services';
 import func from '../../utils/baseFunction';
 import { getCookie } from '../../utils/cookie';
 import './style.css';
@@ -12,13 +17,15 @@ const TransaksiMasuk = () => {
   const [petugas, setPetugas] = useState('');
   const [status, setStatus] = useState('');
   const [nopol, setNopol] = useState('');
-  const [jenis, setJenis] = useState('');
-  const [nama, setNama] = useState('');
+  const [mobil, setMobil] = useState();
+  const [infoMember, setInfoMember] = useState({});
   const [slot, setSlot] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState();
   const [error, setError] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const dataPetugas = getCookie('userData');
+  const dataPetugas = JSON.parse(getCookie('userData'));
 
   const hideError = () => {
     setError(false);
@@ -40,27 +47,66 @@ const TransaksiMasuk = () => {
   }, []);
 
   useEffect(() => {
-    console.log(dataPetugas.ID);
-    penjagaService
-      .viewPenjagaByID(dataPetugas.ID)
-      .then((res) => {
-        setPetugas(res.nama);
-        // console.log(res.nama);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setTanggal(func.getDate());
-    setJamMasuk(func.getTime());
-    setPetugas('');
-    setStatus('Sedang Parkir');
-    setNopol(nopol);
-    setNama(nama);
-    setJenis(jenis);
+    if (nopol.length > 0) {
+      memberService
+        .viewMemberByNopol(nopol)
+        .then((res) => {
+          setInfoMember(res[0]);
+          console.log(res[0]);
+          setMobil(
+            res[0].mobil.filter((x) => {
+              return x.nomor_polisi === nopol;
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      penjagaService
+        .viewPenjagaByID(dataPetugas.ID)
+        .then((ress) => {
+          setPetugas(ress.nama);
+          setTanggal(func.getDate());
+          setJamMasuk(func.getTime());
+          setStatus('Sedang Parkir');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    setPetugas(selectedSlot);
+    setInfoMember(infoMember);
+    setMobil();
+    setTanggal('');
+    setJamMasuk('');
+    setStatus('');
   }, [nopol]);
 
   const onsubmitMasuk = () => {
     // setLoading(true);
+    const data = JSON.stringify({
+      id_penjaga: dataPetugas.ID,
+      id_member: infoMember.nik,
+      nomor_polisi: nopol,
+      jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
+      status_parkir: 'Sudah Parkir',
+      spot_parkir: selectedSlot,
+      jam_masuk: jamMasuk,
+      jam_keluar: '-',
+      tarif: 0,
+    });
+    console.log(data);
+    transaksiParkirService
+      .addTransaksiParkir(data)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
   };
 
   return (
@@ -86,22 +132,23 @@ const TransaksiMasuk = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              <Form onSubmit={onsubmitMasuk()}>
+              <Form>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Control
                     type="text"
                     placeholder="Nomor Kendaraan"
-                    value={nopol}
+                    value={loadingData ? 'Loading...' : nopol}
                     onChange={(e) => {
                       setNopol(e.target.value);
                     }}
+                    required
                   />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                   <Form.Control
                     type="text"
                     placeholder="Jenis Kendaraan"
-                    value={jenis}
+                    value={mobil ? mobil[0].jenis_mobil : ''}
                     readOnly
                   />
                 </Form.Group>
@@ -109,18 +156,24 @@ const TransaksiMasuk = () => {
                   <Form.Control
                     type="text"
                     placeholder="Nama Pemilik"
-                    value={nama}
+                    value={nopol ? infoMember.nama_member : ''}
                     readOnly
                   />
                 </Form.Group>
-                <Form.Control as="select">
+                <Form.Control
+                  as="select"
+                  required
+                  onChange={(e) => {
+                    setSelectedSlot(e.target.value);
+                  }}
+                >
                   <option>Pilih Slot Parkir</option>
                   {slot.map((e) => {
                     return (
                       <option
                         key={e.lantai.toString(2) + e.no_parkir.toString(2)}
                       >
-                        {`${e.lantai.toString()}-${e.no_parkir.toString()}`}
+                        {`${e.lantai.toString()}${e.no_parkir.toString()}`}
                       </option>
                     );
                   })}
@@ -190,8 +243,8 @@ const TransaksiMasuk = () => {
                       marginTop: '20px',
                     }}
                     type="submit"
-                    onSubmit={onsubmitMasuk()}
-                    disabled={loadingData}
+                    onClick={onsubmitMasuk()}
+                    // disabled={loading}
                   >
                     Submit
                   </Button>

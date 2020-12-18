@@ -78,7 +78,7 @@ const Header = ({ isPenjaga, show }) => {
         >
           <NavItem>
             <NavLink
-              style={{ fontSize: '18px', fontWeight: 'bold' }}
+              style={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}
               href="/components/"
             >
               {name}

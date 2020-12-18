@@ -13,6 +13,10 @@ const viewMemberByID = (id) => {
   return BaseService.get(API.MEMBER_BY_ID(id));
 };
 
+const viewMemberByNopol = (nopol) => {
+  return BaseService.get(API.MEMBER_BY_NOPOL(nopol));
+};
+
 const editMemberById = (id, data) => {
   return BaseService.put(API.MEMBER_BY_ID(id), { data });
 };
@@ -42,4 +46,5 @@ export default {
   addAllMobilById,
   editMobilById,
   deleteMemberByID,
+  viewMemberByNopol,
 };

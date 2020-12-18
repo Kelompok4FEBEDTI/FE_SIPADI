@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
+import { transaksiParkirService, memberService } from '../../services';
 
 const TransaksiKeluar = () => {
   //   const [tanggal, setTanggal] = useState('');
   //   const [jamMasuk, setJamMasuk] = useState('');
   //   const [petugas, setPetugas] = useState('');
+  const [dataTransaksi, setDataTransaksi] = useState();
   const [status, setStatus] = useState('');
   const [karcis, setKarcis] = useState('');
   const [jenis, setJenis] = useState('');
@@ -18,10 +20,35 @@ const TransaksiKeluar = () => {
   };
 
   useEffect(() => {
-    setLoadingData(false);
-    setStatus('Keluar');
-    setNama(nama);
-    setJenis(jenis);
+    if (karcis.length > 0) {
+      setLoadingData(true);
+      transaksiParkirService
+        .getTransaksiParkirById(karcis)
+        .then((res) => {
+          setDataTransaksi(res);
+          console.log(res.nomor_polisi);
+          memberService
+            .viewMemberByNopol(res.nomor_polisi)
+            .then((ress) => {
+              console.log(ress);
+              setNama(ress[0].nama_member);
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+            .finally(() => {
+              setLoadingData(true);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setStatus('Keluar');
+      setNama(nama);
+      setJenis(jenis);
+    }
+    setDataTransaksi();
+    setNama('');
   }, [karcis]);
 
   const onsubmitMasuk = () => {
@@ -64,6 +91,27 @@ const TransaksiKeluar = () => {
                 </Form.Group>
               </Form>
             </div>
+            <Row className="ket">
+              <Col md={{ span: 5 }}>Nomor Kendaraan</Col>
+              <Col md={1}>:</Col>
+              <Col className="value" md={5}>
+                {dataTransaksi ? dataTransaksi.nomor_polisi : ''}
+              </Col>
+            </Row>
+            <Row className="ket">
+              <Col md={{ span: 5 }}>Jenis Mobil</Col>
+              <Col md={1}>:</Col>
+              <Col className="value" md={5}>
+                {dataTransaksi ? dataTransaksi.jenis_mobil : ''}
+              </Col>
+            </Row>
+            <Row className="ket">
+              <Col md={{ span: 5 }}>Nama Pemilik</Col>
+              <Col md={1}>:</Col>
+              <Col className="value" md={5}>
+                {nama}
+              </Col>
+            </Row>
           </Col>
           <Col
             style={{
@@ -75,13 +123,13 @@ const TransaksiKeluar = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              <Row className="ket">
+              {/* <Row className="ket">
                 <Col md={{ span: 5 }}>Tanggal</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={{ span: 5 }}>
                   {}
                 </Col>
-              </Row>
+              </Row> */}
               <Row className="ket">
                 <Col md={{ span: 5 }}>Waktu</Col>
                 <Col md={1}>:</Col>
@@ -96,11 +144,18 @@ const TransaksiKeluar = () => {
                   {}
                 </Col>
               </Row>
-              <Row style={{ marginBottom: '0' }} className="ket">
+              <Row className="ket">
                 <Col md={{ span: 5 }}>Status</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
                   {status}
+                </Col>
+              </Row>
+              <Row style={{ marginBottom: '0' }} className="ket">
+                <Col md={{ span: 5 }}>Total Biaya</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {}
                 </Col>
               </Row>
               <Row>

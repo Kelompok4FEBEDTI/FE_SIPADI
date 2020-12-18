@@ -4,14 +4,46 @@ import { Spinner } from 'react-bootstrap';
 const Loading = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '40px' }}>
-      <Spinner animation="grow" variant="info" />
-      <Spinner animation="grow" variant="dark" />
-      <Spinner animation="grow" variant="info" />
-      <Spinner animation="grow" variant="dark" />
-      <Spinner animation="grow" variant="info" />
-      <Spinner animation="grow" variant="dark" />
-      <Spinner animation="grow" variant="info" />
-      <Spinner animation="grow" variant="dark" />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="info"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="dark"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="info"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="dark"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="info"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="dark"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="info"
+      />
+      <Spinner
+        style={{ width: '20px', height: '20px' }}
+        animation="grow"
+        variant="dark"
+      />
     </div>
   );
 };
