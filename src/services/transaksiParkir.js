@@ -1,8 +1,8 @@
 import BaseService from './baseService';
 import API from '../config/rest';
 
-const getTransaksiParkir = () => {
-  return BaseService.get(API.TRANSAKSI_PARKIR);
+const getTransaksiParkir = (offset, limit, jenis) => {
+  return BaseService.get(API.TRANSAKSI_PARKIR(offset, limit, jenis));
 };
 
 const addTransaksiParkir = (data) => {

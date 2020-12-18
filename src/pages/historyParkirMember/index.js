@@ -1,30 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
-// Disini ngeget transaksi by idmember
-// "_id": "5fdbc922767645001702f5c0",
-//         "id_penjaga": "P2",
-//         "id_member": "M1",
-//         "nomor_polisi": "X 9839 OI",
-//         "jenis_mobil": "Panther3",
-//         "status_parkir": "Sudah Parkir",
-//         "spot_parkir": "E27",
-//         "jam_masuk": "2020-12-13T09:25:33.000Z",
-//         "jam_keluar": "2020-12-13T12:30:09.000Z",
-//         "tarif": 10000,
-//         "__v": 0"_id": "5fdbc922767645001702f5c0",
-//         "id_penjaga": "P2",
-//         "id_member": "M1",
-//         "nomor_polisi": "X 9839 OI",
-//         "jenis_mobil": "Panther3",
-//         "status_parkir": "Sudah Parkir",
-//         "spot_parkir": "E27",
-//         "jam_masuk": "2020-12-13T09:25:33.000Z",
-//         "jam_keluar": "2020-12-13T12:30:09.000Z",
-//         "tarif": 10000,
-//         "__v": 0
-
-const HistoryParkirMember = () => {
+const Table1 = () => {
   const dummy = [
     {
       tanggal: '18-12-2020',
@@ -67,10 +44,8 @@ const HistoryParkirMember = () => {
       biaya: 'Rp 16.000',
     },
   ];
-
   return (
     <div>
-      <h3>HistoryParkirMember</h3>
       {dummy && (
         <div
           style={{
@@ -113,6 +88,15 @@ const HistoryParkirMember = () => {
           </Table>
         </div>
       )}
+    </div>
+  );
+};
+
+const HistoryParkirMember = () => {
+  return (
+    <div>
+      <h3>HistoryParkirMember</h3>
+      <Table1 />
     </div>
   );
 };

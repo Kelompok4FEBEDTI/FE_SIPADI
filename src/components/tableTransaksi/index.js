@@ -33,9 +33,10 @@ const TableTransaksi = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((e, index) => {
-            return <ListTransaksi data={e} index={index} />;
-          })}
+          {data &&
+            data.map((e, index) => {
+              return <ListTransaksi data={e} index={index} />;
+            })}
         </tbody>
       </Table>
     </div>

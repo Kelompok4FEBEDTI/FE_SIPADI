@@ -5,7 +5,7 @@ import {
   spotParkirService,
   penjagaService,
   memberService,
-  // transaksiParkirService,
+  transaksiParkirService,
 } from '../../services';
 import func from '../../utils/baseFunction';
 import { getCookie } from '../../utils/cookie';
@@ -23,13 +23,9 @@ const TransaksiMasuk = () => {
   const [selectedSlot, setSelectedSlot] = useState();
   const [error, setError] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(false);
 
   const dataPetugas = JSON.parse(getCookie('userData'));
-
-  const hideError = () => {
-    setError(false);
-  };
 
   useEffect(() => {
     setLoadingData(true);
@@ -39,7 +35,7 @@ const TransaksiMasuk = () => {
         setSlot(res);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
       })
       .finally(() => {
         setLoadingData(false);
@@ -59,7 +55,7 @@ const TransaksiMasuk = () => {
           );
         })
         .catch((err) => {
-          console.log(err);
+          setError(err);
         });
       penjagaService
         .viewPenjagaByID(dataPetugas.ID)
@@ -70,44 +66,52 @@ const TransaksiMasuk = () => {
           setStatus('Sedang Parkir');
         })
         .catch((err) => {
-          console.log(err);
+          setError(err);
         });
     }
     setPetugas('');
     setInfoMember('');
-    setMobil();
+    setMobil('');
     setTanggal('');
     setJamMasuk('');
     setStatus('');
-  }, [nopol]);
+  }, [dataPetugas, nopol]);
 
-  const onsubmitMasuk = () => {
-    // setLoading(true);
-    console.log('TEST');
-    console.log(selectedSlot);
-    // const data = {
-    //   id_penjaga: dataPetugas.ID,
-    //   id_member: infoMember.nik,
-    //   nomor_polisi: nopol,
-    //   jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
-    //   status_parkir: 'Sudah Parkir',
-    //   spot_parkir: selectedSlot,
-    //   jam_masuk: jamMasuk,
-    //   jam_keluar: '-',
-    //   tarif: 0,
-    // };
-    // console.log(data);
-    // transaksiParkirService
-    //   .addTransaksiParkir(data)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   })
-    //   .finally(() => {
-    //     // setLoading(false);
-    //   });
+  const handleSubmitMasuk = () => {
+    setLoadingData(true);
+    const data = {
+      id_penjaga: dataPetugas.ID,
+      id_member: infoMember.nik,
+      nomor_polisi: nopol,
+      jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
+      status_parkir: 'Sudah Parkir',
+      spot_parkir: selectedSlot,
+      jam_masuk: jamMasuk,
+      jam_keluar: '-',
+      tarif: 0,
+    };
+    transaksiParkirService
+      .addTransaksiParkir(data)
+      .then((res) => {
+        setMessage(
+          `Transaksi Masuk ${res.jenis_mobil} dengan plat Nomer ${res.nomo_polisi}`
+        );
+        setPetugas('');
+        setInfoMember('');
+        setMobil();
+        setTanggal('');
+        setJamMasuk('');
+        setStatus('');
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoadingData(false);
+      });
+  };
+  const hideError = () => {
+    setError(false);
   };
 
   return (
@@ -119,6 +123,7 @@ const TransaksiMasuk = () => {
           </Alert>
         </div>
       )}
+      {message && <Alert variant="danger">{message}</Alert>}
       {loadingData ? (
         <Loading />
       ) : (
@@ -133,7 +138,7 @@ const TransaksiMasuk = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              <Form onSubmit={onsubmitMasuk}>
+              <Form onSubmit={handleSubmitMasuk}>
                 <Form.Group>
                   <Form.Control
                     type="text"
@@ -164,6 +169,7 @@ const TransaksiMasuk = () => {
                 <Form.Control
                   as="select"
                   required
+                  value={selectedSlot}
                   onChange={(e) => {
                     setSelectedSlot(e.target.value);
                   }}
@@ -239,29 +245,21 @@ const TransaksiMasuk = () => {
                   </Button>
                 </Col>
                 <Col>
-                  <input
+                  <Button
+                    variant="danger"
                     style={{
-                      backgroundColor: '#16D9D0',
                       border: '0',
                       width: '100%',
                       marginTop: '20px',
                     }}
-                    type="submit"
-                    value="Submit"
-                  />
-                  {/* <input
-                    style={{
-                      backgroundColor: '#16D9D0',
-                      border: '0',
-                      width: '100%',
-                      marginTop: '20px',
+                    type="button"
+                    disabled={loadingData}
+                    onClick={() => {
+                      handleSubmitMasuk();
                     }}
-                    type="submit"
-                    value="submit"
-                    // disabled={loading}
                   >
                     Submit
-                  </input> */}
+                  </Button>
                 </Col>
               </Row>
             </div>

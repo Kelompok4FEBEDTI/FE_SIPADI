@@ -3,7 +3,17 @@ export default {
   LOGIN_PENJAGA_PARKIR: '/auth/loginPenjaga',
   REGISTER_MEMBER: '/member',
   SHOW_SPOT_PARKIR: '/spotparkir',
-  TRANSAKSI_PARKIR: '/transaksi',
+  TRANSAKSI_PARKIR: (offset, limit, jenis) => {
+    let endpoint = '/transaksi';
+    if (jenis && limit) {
+      endpoint += `?jenis=${jenis}&offset=${offset}&limit=${limit}`;
+    } else if (offset) {
+      endpoint += `?offset=${offset}&limit=${limit}`;
+    } else if (jenis) {
+      endpoint += `?jenis=${jenis}`;
+    }
+    return endpoint;
+  },
   TRANSAKSI_PARKIR_BY_ID: (id) => {
     return `/transaksi/${id}`;
   },
