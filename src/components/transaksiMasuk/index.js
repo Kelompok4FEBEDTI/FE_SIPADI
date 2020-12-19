@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
@@ -7,12 +8,10 @@ import {
   memberService,
   transaksiParkirService,
 } from '../../services';
-import func from '../../utils/baseFunction';
 import { getCookie } from '../../utils/cookie';
 import './style.css';
 
 const TransaksiMasuk = () => {
-  const [tanggal, setTanggal] = useState('');
   const [jamMasuk, setJamMasuk] = useState('');
   const [petugas, setPetugas] = useState('');
   const [status, setStatus] = useState('');
@@ -24,7 +23,6 @@ const TransaksiMasuk = () => {
   const [error, setError] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [message, setMessage] = useState(false);
-
   const dataPetugas = JSON.parse(getCookie('userData'));
 
   useEffect(() => {
@@ -43,6 +41,14 @@ const TransaksiMasuk = () => {
   }, []);
 
   useEffect(() => {
+    setPetugas('');
+    setInfoMember('');
+    setMobil('');
+    setJamMasuk('');
+    setStatus('');
+  }, [nopol]);
+
+  const getData = () => {
     if (nopol.length > 0) {
       memberService
         .viewMemberByNopol(nopol)
@@ -53,17 +59,16 @@ const TransaksiMasuk = () => {
               return x.nomor_polisi === nopol;
             })
           );
-          penjagaService
-            .viewPenjagaByID(dataPetugas.ID)
-            .then((ress) => {
-              setPetugas(ress.nama);
-              setTanggal(func.getDate());
-              setJamMasuk(func.getTime());
-              setStatus('Sedang Parkir');
-            })
-            .catch((err) => {
-              setError(err);
-            });
+        })
+        .catch((err) => {
+          setError(err);
+        });
+      penjagaService
+        .viewPenjagaByID(dataPetugas.ID)
+        .then((ress) => {
+          setPetugas(ress.nama);
+          setJamMasuk(new Date(0));
+          setStatus('Sedang Parkir');
         })
         .catch((err) => {
           setError(err);
@@ -72,23 +77,22 @@ const TransaksiMasuk = () => {
     setPetugas('');
     setInfoMember('');
     setMobil('');
-    setTanggal('');
     setJamMasuk('');
     setStatus('');
-  }, [dataPetugas, nopol]);
+  };
 
   const handleSubmitMasuk = () => {
     setLoadingData(true);
     const data = {
       id_penjaga: dataPetugas.ID,
-      id_member: infoMember.nik,
+      id_member: infoMember._id,
       nomor_polisi: nopol,
-      jenis_mobil: mobil ? mobil[0].jenis_mobil : '',
+      jenis_mobil: mobil && mobil[0].jenis_mobil,
       status_parkir: 'Sudah Parkir',
       spot_parkir: selectedSlot,
       jam_masuk: jamMasuk,
-      jam_keluar: '-',
-      tarif: 0,
+      jam_keluar: new Date(0),
+      tarif: 10,
     };
     transaksiParkirService
       .addTransaksiParkir(data)
@@ -99,7 +103,6 @@ const TransaksiMasuk = () => {
         setPetugas('');
         setInfoMember('');
         setMobil();
-        setTanggal('');
         setJamMasuk('');
         setStatus('');
       })
@@ -115,7 +118,15 @@ const TransaksiMasuk = () => {
   };
 
   return (
-    <Container style={{ border: '1px solid lightgray', paddingTop: '20px' }}>
+    <Container
+      style={{
+        border: '1px solid lightgray',
+        paddingTop: '20px',
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxHeight: '500px',
+      }}
+    >
       {error && (
         <div>
           <Alert onClick={hideError} variant="danger">
@@ -145,7 +156,7 @@ const TransaksiMasuk = () => {
                     placeholder="Nomor Kendaraan"
                     value={loadingData ? 'Loading...' : nopol}
                     onChange={(e) => {
-                      setNopol(e.target.value);
+                      setNopol(e.target.value.toUpperCase());
                     }}
                     required
                   />
@@ -162,7 +173,7 @@ const TransaksiMasuk = () => {
                   <Form.Control
                     type="text"
                     placeholder="Nama Pemilik"
-                    value={nopol ? infoMember.nama_member : ''}
+                    value={infoMember ? infoMember.nama_member : ''}
                     readOnly
                   />
                 </Form.Group>
@@ -199,32 +210,42 @@ const TransaksiMasuk = () => {
           >
             <div style={{ paddingLeft: '10px' }}>
               <Row className="ket">
-                <Col md={{ span: 5 }}>Tanggal</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={{ span: 5 }}>
-                  {tanggal}
-                </Col>
-              </Row>
-              <Row className="ket">
-                <Col md={{ span: 5 }}>Jam Masuk</Col>
-                <Col md={1}>:</Col>
+                <Col md={{ span: 4 }}>Jam Masuk</Col>
+                <Col md={-1}>:</Col>
                 <Col className="value" md={5}>
                   {jamMasuk}
                 </Col>
               </Row>
               <Row className="ket">
-                <Col md={{ span: 5 }}>Petugas</Col>
-                <Col md={1}>:</Col>
+                <Col md={{ span: 4 }}>Petugas</Col>
+                <Col md={-1}>:</Col>
                 <Col className="value" md={5}>
                   {petugas}
                 </Col>
               </Row>
               <Row style={{ marginBottom: '0' }} className="ket">
-                <Col md={{ span: 5 }}>Status</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={5}>
+                <Col md={{ span: 4 }}>Status</Col>
+                <Col md={-1}>:</Col>
+                <Col md={{ span: 5 }} className="value">
                   {status}
                 </Col>
+              </Row>
+              <Row style={{ margin: '1px', marginBottom: '2px' }}>
+                <Button
+                  variant="info"
+                  style={{
+                    border: '0',
+                    width: '100%',
+                    marginTop: '10px',
+                  }}
+                  type="button"
+                  disabled={loadingData}
+                  onClick={() => {
+                    getData();
+                  }}
+                >
+                  Get Data
+                </Button>
               </Row>
               <Row>
                 <Col>
@@ -233,7 +254,7 @@ const TransaksiMasuk = () => {
                     style={{
                       border: '0',
                       width: '100%',
-                      marginTop: '20px',
+                      marginTop: '10px',
                     }}
                     type="button"
                     disabled={loadingData}
@@ -250,7 +271,7 @@ const TransaksiMasuk = () => {
                     style={{
                       border: '0',
                       width: '100%',
-                      marginTop: '20px',
+                      marginTop: '10px',
                       backgroundColor: '#16D9D0',
                     }}
                     type="button"

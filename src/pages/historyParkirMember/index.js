@@ -36,6 +36,7 @@ const Table1 = () => {
           style={{
             padding: '0',
             margin: '0',
+            backgroundColor: 'white',
             // border: '2px solid green',
           }}
         >
@@ -112,7 +113,7 @@ const HistoryParkirMember = () => {
   return (
     <Container
       style={{
-        backgroundColor: 'white',
+        backgroundColor: 'unset',
         margin: '0',
         position: 'absolute',
         maxWidth: '1000px',
