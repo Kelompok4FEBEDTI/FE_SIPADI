@@ -34,7 +34,7 @@ const ProfileMember = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [memberData]);
+  }, [memberData.ID]);
 
   const deleteMobil = (idMobil) => {
     memberService
