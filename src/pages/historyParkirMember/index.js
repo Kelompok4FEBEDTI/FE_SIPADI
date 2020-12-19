@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Container } from 'react-bootstrap';
+import { Loading } from '../../components';
 
 const Table1 = () => {
   const dummy = [
@@ -109,10 +110,21 @@ const Table1 = () => {
 };
 
 const HistoryParkirMember = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+    setError(false);
+  }, []);
+
   return (
     <div>
-      <h3>HistoryParkirMember</h3>
-      <Table1 />
+      {error && <p>{error}</p>}
+      {loading && <Loading />}
+      <Container style={{ marginTop: '20px' }}>
+        <Table1 />
+      </Container>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
 import { spotParkirService } from '../../services';
 import { SpotParkirComponent, Loading } from '../../components';
 
@@ -28,10 +29,11 @@ const SpotParkir = () => {
 
   return (
     <div>
-      <h3>Spot Parkir</h3>
-      {loading && Loading}
-      {error && renderError}
-      {data ? <SpotParkirComponent data={data} /> : ''}
+      <Container style={{ marginTop: '20px' }}>
+        {loading && Loading}
+        {error && renderError}
+        {data && <SpotParkirComponent data={data} />}
+      </Container>
     </div>
   );
 };

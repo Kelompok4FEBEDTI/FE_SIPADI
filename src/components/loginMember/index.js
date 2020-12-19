@@ -43,6 +43,7 @@ const LoginMembeR = () => {
           setLoading(false);
         });
     } else {
+      setError('Please isi seluruh Form!');
       setUsername('');
       setPassword('');
       setLoading(false);
