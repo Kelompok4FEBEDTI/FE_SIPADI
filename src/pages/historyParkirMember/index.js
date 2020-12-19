@@ -8,6 +8,7 @@ const Table1 = () => {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState('');
   const memberData = JSON.parse(getCookie('userData'));
+  const [error, setError] = useState();
   useEffect(() => {
     setLoading(true);
     transaksiParkirService
@@ -16,10 +17,9 @@ const Table1 = () => {
         setHistory(res);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
       })
       .finally(() => {
-        console.log(loading);
         setLoading(false);
       });
   }, [memberData.ID]);
@@ -29,6 +29,7 @@ const Table1 = () => {
         border: '1px solid darkgray',
       }}
     >
+      {error && <p>{error}</p>}
       {loading && <Loading />}
       {history ? (
         <div
@@ -103,7 +104,7 @@ const HistoryParkirMember = () => {
   return (
     <Container
       style={{
-        backgroundColor: 'unset',
+        backgroundColor: 'white',
         margin: '0',
         position: 'absolute',
         maxWidth: '1000px',

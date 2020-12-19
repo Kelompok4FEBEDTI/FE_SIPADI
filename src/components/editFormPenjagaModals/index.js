@@ -12,16 +12,15 @@ const EditFormPenjagaModals = ({ data }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const penjagaData = JSON.parse(getCookie('userData'));
-  // console.log(data);
-  // // data.mobil = [];
-  // console.log('INI', data);
+  const [error, setError] = useState();
+  const [pesan, setPesan] = useState();
 
   useEffect(() => {
     setNama(data.nama);
     setNik(data.nik);
     setUsername(data.username);
     setPassword(data.password);
-  }, []);
+  }, [data]);
 
   const showModal = () => {
     setVisible(true);
@@ -31,15 +30,14 @@ const EditFormPenjagaModals = ({ data }) => {
     setLoading(true);
     data.nama = nama;
     data.username = username;
-    console.log(data);
     penjagaService
       .editPenjagaByID(penjagaData.ID, data)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        setPesan('Berhasil Edit');
         window.location.replace('/profilepenjagaparkir');
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
       })
       .finally(() => {
         setLoading(false);
@@ -52,6 +50,8 @@ const EditFormPenjagaModals = ({ data }) => {
 
   return (
     <>
+      {error && <p>{error}</p>}
+      {pesan && <p>{pesan}</p>}
       <Button
         style={{
           position: 'absolute',

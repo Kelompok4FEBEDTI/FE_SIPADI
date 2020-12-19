@@ -16,6 +16,7 @@ const ProfileMember = () => {
   const [dataMember, setDataMember] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
+  const [pesan, setPesan] = useState();
 
   const memberData = JSON.parse(getCookie('userData'));
 
@@ -33,18 +34,17 @@ const ProfileMember = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [memberData]);
 
   const deleteMobil = (idMobil) => {
-    console.log('delete');
     memberService
       .deleteMobilByID(idMobil)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        setPesan('Berhasil Menghapus');
         window.location.replace('/profilemember');
       })
       .catch((err) => {
-        console.log(err);
+        setError(err);
       });
   };
 
@@ -65,6 +65,7 @@ const ProfileMember = () => {
       }}
     >
       {error && <p>{error}</p>}
+      {pesan && <p>{pesan}</p>}
       {/* {loading && <p>Loading...</p>} */}
       {dataMember && !loading ? (
         <div
@@ -123,7 +124,6 @@ const ProfileMember = () => {
                 </thead>
                 <tbody>
                   {dataMember.mobil.map((data, index) => {
-                    console.log(`${data._id}`);
                     return (
                       <tr>
                         <td>{index + 1}</td>
