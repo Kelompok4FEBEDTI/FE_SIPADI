@@ -18,7 +18,7 @@ const TransaksiMasuk = () => {
   const [status, setStatus] = useState('');
   const [nopol, setNopol] = useState('');
   const [mobil, setMobil] = useState();
-  const [infoMember, setInfoMember] = useState({});
+  const [infoMember, setInfoMember] = useState();
   const [slot, setSlot] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState();
   const [error, setError] = useState(false);
@@ -53,17 +53,17 @@ const TransaksiMasuk = () => {
               return x.nomor_polisi === nopol;
             })
           );
-        })
-        .catch((err) => {
-          setError(err);
-        });
-      penjagaService
-        .viewPenjagaByID(dataPetugas.ID)
-        .then((ress) => {
-          setPetugas(ress.nama);
-          setTanggal(func.getDate());
-          setJamMasuk(func.getTime());
-          setStatus('Sedang Parkir');
+          penjagaService
+            .viewPenjagaByID(dataPetugas.ID)
+            .then((ress) => {
+              setPetugas(ress.nama);
+              setTanggal(func.getDate());
+              setJamMasuk(func.getTime());
+              setStatus('Sedang Parkir');
+            })
+            .catch((err) => {
+              setError(err);
+            });
         })
         .catch((err) => {
           setError(err);
@@ -246,11 +246,12 @@ const TransaksiMasuk = () => {
                 </Col>
                 <Col>
                   <Button
-                    variant="danger"
+                    // variant="danger"
                     style={{
                       border: '0',
                       width: '100%',
                       marginTop: '20px',
+                      backgroundColor: '#16D9D0',
                     }}
                     type="button"
                     disabled={loadingData}

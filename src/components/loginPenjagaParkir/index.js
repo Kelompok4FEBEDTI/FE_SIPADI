@@ -42,15 +42,16 @@ const LoginPenjagaParkir = () => {
           setUsername('');
           setPassword('');
           setLoading(false);
+          if (sukses) {
+            console.log('Sukses');
+            window.location.replace('/homepenjagaparkir');
+          }
         });
     } else {
       setError('Please isi seluruh Form!');
       setUsername('');
       setPassword('');
       setLoading(false);
-    }
-    if (sukses) {
-      window.location.replace('/homepenjagaparkir');
     }
     e.preventDefault();
   };

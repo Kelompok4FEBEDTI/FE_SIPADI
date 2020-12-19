@@ -1,67 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Container } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Table, Container, Alert } from 'react-bootstrap';
+import { transaksiParkirService } from '../../services';
+import { getCookie } from '../../utils/cookie';
 import { Loading } from '../../components';
 
 const Table1 = () => {
-  const dummy = [
-    {
-      tanggal: '18-12-2020',
-      nama: 'Rahma1',
-      no_kendaraan: 'B 4023 CF',
-      mobil: 'Nissan',
-      jam_masuk: '08.00',
-      jam_keluar: '10.00',
-      petugas: 'Daffa',
-      biaya: 'Rp 20.000',
-    },
-    {
-      tanggal: '18-12-2020',
-      nama: 'Rahma2',
-      no_kendaraan: 'B 4023 CF',
-      mobil: 'Nissan',
-      jam_masuk: '08.00',
-      jam_keluar: '10.00',
-      petugas: 'Daffa',
-      biaya: 'Rp 19.000',
-    },
-    {
-      tanggal: '18-12-2020',
-      nama: 'Rahma3',
-      no_kendaraan: 'B 4023 CF',
-      mobil: 'Nissan',
-      jam_masuk: '08.00',
-      jam_keluar: '10.00',
-      petugas: 'Daffa',
-      biaya: 'Rp 18.000',
-    },
-    {
-      tanggal: '18-12-2020',
-      nama: 'Rahma4',
-      no_kendaraan: 'B 4023 CF',
-      mobil: 'Nissan',
-      jam_masuk: '08.00',
-      jam_keluar: '10.00',
-      petugas: 'Daffa',
-      biaya: 'Rp 16.000',
-    },
-  ];
+  const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState('');
+  const memberData = JSON.parse(getCookie('userData'));
+  const [error, setError] = useState();
+  useEffect(() => {
+    setLoading(true);
+    transaksiParkirService
+      .getTransaksiParkirById(memberData.ID)
+      .then((res) => {
+        setHistory(res);
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [memberData.ID]);
   return (
-    <Container
+    <div
       style={{
-        backgroundColor: 'unset',
-        margin: '0',
-        position: 'absolute',
-        maxWidth: '1000px',
-        top: '50%',
-        left: '50%',
-        padding: '0',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
         border: '1px solid darkgray',
-        // overflow: 'scroll'
       }}
     >
-      {dummy && (
+      {error && <p>{error}</p>}
+      {loading && <Loading />}
+      {history ? (
         <div
           style={{
             padding: '0',
@@ -69,7 +39,12 @@ const Table1 = () => {
             // border: '2px solid green',
           }}
         >
-          <Table striped hover className="text-center">
+          <Table
+            style={{ overflow: 'scroll' }}
+            striped
+            hover
+            className="text-center"
+          >
             <thead>
               <tr>
                 <th>No</th>
@@ -85,27 +60,43 @@ const Table1 = () => {
               </tr>
             </thead>
             <tbody>
-              {dummy.map((data, index) => {
-                return (
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>ACTION</td>
-                    <td>{data.tanggal}</td>
-                    <td>{data.nama}</td>
-                    <td>{data.no_kendaraan}</td>
-                    <td>{data.mobil}</td>
-                    <td>{data.jam_masuk}</td>
-                    <td>{data.jam_keluar}</td>
-                    <td>{data.petugas}</td>
-                    <td>{data.biaya}</td>
-                  </tr>
-                );
-              })}
+              {history &&
+                history.map((data, index) => {
+                  return (
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>ACTION</td>
+                      <td>{data.tanggal}</td>
+                      <td>{data.nama}</td>
+                      <td>{data.no_kendaraan}</td>
+                      <td>{data.mobil}</td>
+                      <td>{data.jam_masuk}</td>
+                      <td>{data.jam_keluar}</td>
+                      <td>{data.petugas}</td>
+                      <td>{data.biaya}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </div>
+      ) : (
+        <div>
+          {!loading && (
+            <p
+              style={{
+                fontWeight: 'lighter',
+                fontSize: '12px',
+                marginTop: '15px',
+              }}
+              className="text-center"
+            >
+              History tidak ditemukan
+            </p>
+          )}
+        </div>
       )}
-    </Container>
+    </div>
   );
 };
 
@@ -119,13 +110,29 @@ const HistoryParkirMember = () => {
   }, []);
 
   return (
-    <div>
-      {error && <p>{error}</p>}
+    <Container
+      style={{
+        backgroundColor: 'white',
+        margin: '0',
+        position: 'absolute',
+        maxWidth: '1000px',
+        top: '50%',
+        left: '50%',
+        padding: '0',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        // overflow: 'scroll'
+      }}
+    >
       {loading && <Loading />}
-      <Container style={{ marginTop: '20px' }}>
-        <Table1 />
-      </Container>
-    </div>
+      {error && (
+        <div style={{ margin: '20px' }}>
+          <Alert variant="danger">{error}</Alert>
+        </div>
+      )}
+      <h5 className="text-center">History Parkir</h5>
+      <Table1 />
+    </Container>
   );
 };
 

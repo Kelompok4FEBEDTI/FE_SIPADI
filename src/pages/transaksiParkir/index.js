@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-import {
-  Container,
-  Pagination,
-  Form,
-  Button,
-  FormControl,
-  Alert,
-} from 'react-bootstrap';
+import { Container, Form, Button, FormControl, Alert } from 'react-bootstrap';
 import classnames from 'classnames';
+import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { TableTransaksi, Loading } from '../../components';
 import { transaksiParkirService, memberService } from '../../services';
+import './style.css';
 
 const JudulTransaksi = (props) => {
   const { totalData } = props;
@@ -135,73 +130,108 @@ const TransaksiParkir = () => {
   const [error, setError] = useState();
   const [activeTab, setActiveTab] = useState('1');
   const [totalData, setTotalData] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState('');
+  const [pageCount, setPageCount] = useState();
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
   const fetchDataTransaksiAll = () => {
-    transaksiParkirService
-      .getTransaksiParkir()
-      .then((res) => {
-        setDataTransaksi(res.data);
-        setTotalData(res.total);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // console.log('Hai iklas All');
+    setDataTransaksi([]);
+    setError(false);
+    setPageCount(0);
+    setLoading(true);
+    // transaksiParkirService
+    //   .getTransaksiParkir(offset, limit)
+    //   .then((res) => {
+    //     setDataTransaksi(res.data);
+    //     setTotalData(res.total);
+    //     setPageCount(res.total / offset);
+    //   })
+    //   .catch((err) => {
+    //     setError(err);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
   const fetchDataTransaksiMasuk = () => {
-    transaksiParkirService
-      .getTransaksiParkir(0, 2, 'ParkirMasuk')
-      .then((res) => {
-        setDataTransaksi(res.data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // console.log('Hai iklas masuk');
+    setLoading(true);
+    // transaksiParkirService
+    //   .getTransaksiParkir(offset, limit, 'ParkirMasuk')
+    //   .then((res) => {
+    //     setDataTransaksi(res.data);
+    //     setTotalData(res.total);
+    //     setPageCount(res.total / offset);
+    //   })
+    //   .catch((err) => {
+    //     setError(err);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
   const fetchDataTransaksiKeluar = () => {
-    transaksiParkirService
-      .getTransaksiParkir(0, 2, 'ParkirKeluar')
-      .then((res) => {
-        setDataTransaksi(res.data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // console.log('Hai iklas out');
+    setLoading(true);
+    // transaksiParkirService
+    //   .getTransaksiParkir(offset, limit, 'ParkirKeluar')
+    //   .then((res) => {
+    //     setDataTransaksi(res.data);
+    //     setTotalData(res.total);
+    //     setPageCount(res.total / offset);
+    //   })
+    //   .catch((err) => {
+    //     setError(err);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchDataTransaksiAll();
   }, []);
 
+  const handlePageClick = (e) => {
+    const selectedPage = e.selected;
+    setOffset(selectedPage * limit);
+    if (dataTransaksi[0].jenis === 'ParkirMasuk') {
+      fetchDataTransaksiMasuk(offset, limit);
+    } else if (dataTransaksi[0].jenis === 'ParkirKeluar') {
+      fetchDataTransaksiKeluar(offset, limit);
+    } else {
+      fetchDataTransaksiAll(offset, limit);
+    }
+  };
+
   return (
     <div>
-      {error && <p>{error}</p>}
-      {loading && <Loading />}
       <Container style={{ marginTop: '20px' }}>
+        <div style={{ margin: '20px', jsutifyContent: 'center' }}>
+          {error && <p>{error}</p>}
+          {loading && <Loading />}
+        </div>
         <JudulTransaksi totalData={totalData} />
         <Search />
         <div>
           <Nav tabs>
             <NavItem>
               <NavLink
+                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '1' })}
                 onClick={() => {
+                  setTotalData(0);
+                  setOffset(0);
+                  setLimit(10);
                   toggle('1');
+                  fetchDataTransaksiAll();
                 }}
               >
                 All Transaksi
@@ -209,8 +239,12 @@ const TransaksiParkir = () => {
             </NavItem>
             <NavItem>
               <NavLink
+                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '2' })}
                 onClick={() => {
+                  setTotalData(0);
+                  setOffset(0);
+                  setLimit(10);
                   toggle('2');
                   fetchDataTransaksiMasuk();
                 }}
@@ -222,6 +256,9 @@ const TransaksiParkir = () => {
               <NavLink
                 className={classnames({ active: activeTab === '3' })}
                 onClick={() => {
+                  setTotalData(0);
+                  setOffset(0);
+                  setLimit(10);
                   toggle('3');
                   fetchDataTransaksiKeluar();
                 }}
@@ -242,23 +279,19 @@ const TransaksiParkir = () => {
             </TabPane>
           </TabContent>
         </div>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item>{1}</Pagination.Item>
-          <Pagination.Ellipsis />
-
-          <Pagination.Item>{10}</Pagination.Item>
-          <Pagination.Item>{11}</Pagination.Item>
-          <Pagination.Item active>{12}</Pagination.Item>
-          <Pagination.Item>{13}</Pagination.Item>
-          <Pagination.Item disabled>{14}</Pagination.Item>
-
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
+        <ReactPaginate
+          previousLabel="<<<"
+          nextLabel=">>>"
+          breakLabel="..."
+          breakClassName="breakme"
+          pageCount={pageCount}
+          marginPageDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName="pagination"
+          subContainerClassName="pages pagination"
+          activeClassName="active"
+        />
       </Container>
     </div>
   );

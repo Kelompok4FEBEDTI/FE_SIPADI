@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'antd';
-import { Form } from 'react-bootstrap';
+import { Form, Alert } from 'react-bootstrap';
 import { memberService } from '../../services';
 import { getCookie } from '../../utils/cookie';
 // import { Loading } from '..';
@@ -10,6 +10,7 @@ const AddFormMobilModals = () => {
   const [loading, setLoading] = useState(false);
   const [nopol, setNopol] = useState('');
   const [jenis, setJenis] = useState('');
+  const [error, setError] = useState('');
 
   const memberData = JSON.parse(getCookie('userData'));
 
@@ -25,13 +26,12 @@ const AddFormMobilModals = () => {
     setLoading(true);
     memberService
       .addMobilById(memberData.ID, nopol, jenis)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         handleCancel();
         window.location.replace('/profilemember');
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
       })
       .finally(() => {
         setLoading(false);
@@ -88,6 +88,11 @@ const AddFormMobilModals = () => {
             margin: '20px',
           }}
         >
+          {error && (
+            <div style={{ margin: '20px' }}>
+              <Alert variant="danger">{error}</Alert>
+            </div>
+          )}
           <Form>
             <Form.Group controlId="formNopol">
               <Form.Control
