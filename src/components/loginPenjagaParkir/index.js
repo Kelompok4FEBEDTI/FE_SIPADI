@@ -10,30 +10,48 @@ const LoginPenjagaParkir = () => {
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sukses, setSukses] = useState(false);
+
+  const validation = () => {
+    if (username && password) {
+      return true;
+    }
+    return false;
+  };
 
   const handleLoginSubmit = (e) => {
     setLoading(true);
-    authService
-      .loginPenjagaParkir(username, password)
-      .then((res) => {
-        const cookieToken = res.token;
-        const cookieUser = {
-          username: res.nama,
-          user_role: 'penjaga',
-          ID: res.ID,
-        };
-        setCookie('userData', JSON.stringify(cookieUser), 10000);
-        setCookie('token', JSON.stringify(cookieToken), 10000);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setUsername('');
-        setPassword('');
-        setLoading(false);
-        window.location.replace('/homepenjagaparkir');
-      });
+    if (validation()) {
+      authService
+        .loginPenjagaParkir(username, password)
+        .then((res) => {
+          const cookieToken = res.token;
+          const cookieUser = {
+            username: res.nama,
+            user_role: 'penjaga',
+            ID: res.ID,
+          };
+          setCookie('userData', JSON.stringify(cookieUser), 10000);
+          setCookie('token', JSON.stringify(cookieToken), 10000);
+          setSukses(true);
+        })
+        .catch((err) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setUsername('');
+          setPassword('');
+          setLoading(false);
+        });
+    } else {
+      setError('Please isi seluruh Form!');
+      setUsername('');
+      setPassword('');
+      setLoading(false);
+    }
+    if (sukses) {
+      window.location.replace('/homepenjagaparkir');
+    }
     e.preventDefault();
   };
 
@@ -44,7 +62,7 @@ const LoginPenjagaParkir = () => {
   return (
     <Container style={{ border: '1px solid lightgray', paddingRight: '0' }}>
       {error && (
-        <div>
+        <div style={{ margin: '20px' }}>
           <Alert onClick={hideError} variant="danger">
             {error}
           </Alert>

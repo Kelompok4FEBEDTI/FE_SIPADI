@@ -14,26 +14,43 @@ const RegisterMember = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  const validation = () => {
+    if (username && password && nama && nik && jenisKelamin) {
+      return true;
+    }
+    return false;
+  };
+
   const handleRegisterSubmit = (e) => {
+    setError(false);
+    setSuccess(false);
     setLoading(true);
-    authService
-      .registerMember(username, password, nama, nik, jenisKelamin)
-      .then((res) => {
-        console.log('Hello Iklas 2 ', res);
-        setSuccess(res.data);
-        window.location.replace('/');
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setUsername('');
-        setPassword('');
-        setNama('');
-        setJenisKelamin('');
-        setNik('');
-        setLoading(false);
-      });
+    if (validation()) {
+      authService
+        .registerMember(username, password, nama, nik, jenisKelamin)
+        .then((res) => {
+          setSuccess(res.data);
+        })
+        .catch((err) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setUsername('');
+          setPassword('');
+          setNama('');
+          setJenisKelamin('');
+          setNik('');
+          setLoading(false);
+        });
+    } else {
+      setUsername('');
+      setPassword('');
+      setNama('');
+      setJenisKelamin('');
+      setNik('');
+      setError('Please isi seluruh Form!');
+      setLoading(false);
+    }
     e.preventDefault();
   };
 
@@ -44,6 +61,7 @@ const RegisterMember = () => {
   return (
     <Container
       style={{
+        border: '1px solid lightgray',
         paddingRight: '0',
         width: 'fit-content',
         height: 'fit-content',
@@ -56,14 +74,14 @@ const RegisterMember = () => {
       }}
     >
       {error && (
-        <div>
+        <div style={{ margin: '20px' }}>
           <Alert onClick={hideError} variant="danger">
             {error}
           </Alert>
         </div>
       )}
       {success && (
-        <div>
+        <div style={{ margin: '20px' }}>
           <Alert onClick={hideError} variant="success">
             {`Congratulation
             ${success}
@@ -71,17 +89,14 @@ const RegisterMember = () => {
           </Alert>
         </div>
       )}
-      <Row
-        style={{
-          border: '1px solid lightgray',
-        }}
-      >
+      <Row>
         <Col
           style={{
             backgroundColor: 'white',
             paddingBottom: '20px',
             paddingLeft: '25px',
             maxWidth: '400px',
+            overflow: 'hidden',
           }}
           xs={12}
           md={{}}

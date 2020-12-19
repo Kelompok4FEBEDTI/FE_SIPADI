@@ -4,7 +4,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import { LoginMember, LoginPenjaga } from '../../components';
 import './style.css';
-// import { Link } from 'react-router-dom';
+// import { getCookie, isUserAuthenticated } from '../../utils/cookie';
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -12,6 +12,7 @@ const Home = () => {
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
+
   return (
     <Container
       style={{
