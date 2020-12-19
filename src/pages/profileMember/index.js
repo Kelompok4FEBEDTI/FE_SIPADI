@@ -150,6 +150,7 @@ const ProfileMember = () => {
                   >
                     <td />
                     <td />
+                    <td />
                     <td>
                       <AddFormMobilModals />
                     </td>

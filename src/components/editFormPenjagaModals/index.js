@@ -7,7 +7,7 @@ import { penjagaService } from '../../services';
 const EditFormPenjagaModals = ({ data }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [nik, setNik] = useState('');
+  const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,6 +18,7 @@ const EditFormPenjagaModals = ({ data }) => {
 
   useEffect(() => {
     setNama(data.nama);
+    setNik(data.nik);
     setUsername(data.username);
     setPassword(data.password);
   }, []);
@@ -108,7 +109,7 @@ const EditFormPenjagaModals = ({ data }) => {
               <Form.Control
                 type="text"
                 placeholder="NIK"
-                value={data.nik_member}
+                value={nik}
                 readOnly
               />
             </Form.Group>
