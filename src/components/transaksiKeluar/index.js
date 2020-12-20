@@ -4,6 +4,7 @@ import { Modal } from 'antd';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
 import { transaksiParkirService } from '../../services';
+import Func from '../../utils/baseFunction';
 
 const getDate = () => {
   const today = new Date();
@@ -180,18 +181,18 @@ const TransaksiKeluar = () => {
                   {dataTransaksi.id_member}
                 </Col>
               </Row>
-              <Row className="ket">
+              {/* <Row className="ket">
                 <Col md={{ span: 5 }}>Tanggal</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={{ span: 5 }}>
                   {dataTransaksi.jam_masuk}
                 </Col>
-              </Row>
+              </Row> */}
               <Row className="ket">
                 <Col md={{ span: 5 }}>Waktu</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.jam_masuk}
+                  {Func.convertISO(dataTransaksi.jam_masuk)}
                 </Col>
               </Row>
               <Row className="ket">
