@@ -5,12 +5,11 @@ import { setCookie } from '../../utils/cookie';
 import { HeaderAuth, Loading } from '..';
 import { GambarLogin } from '../../assets';
 
-const LoginMembeR = () => {
+const LoginMember = () => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [sukses, setSukses] = useState(false);
 
   const validation = () => {
     if (username && password) {
@@ -32,7 +31,6 @@ const LoginMembeR = () => {
           };
           setCookie('userData', JSON.stringify(cookieUser), 10000);
           setCookie('token', JSON.stringify(cookieToken), 10000);
-          setSukses(true);
         })
         .catch((err) => {
           setError(err.message);
@@ -41,16 +39,13 @@ const LoginMembeR = () => {
           setUsername('');
           setPassword('');
           setLoading(false);
+          window.location.replace('/profilemember');
         });
     } else {
       setError('Please isi seluruh Form!');
       setUsername('');
       setPassword('');
       setLoading(false);
-    }
-    if (sukses) {
-      window.location.replace('/profilemember');
-      setSukses(false);
     }
     e.preventDefault();
   };
@@ -85,7 +80,6 @@ const LoginMembeR = () => {
             </p>
             <Form onSubmit={handleLoginSubmit}>
               <Form.Group controlId="formBasicEmail">
-                {/* <Form.Label>Username</Form.Label> */}
                 <Form.Control
                   type="text"
                   placeholder="Username"
@@ -96,7 +90,6 @@ const LoginMembeR = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
-                {/* <Form.Label>Password</Form.Label> */}
                 <Form.Control
                   type="password"
                   placeholder="Password"
@@ -136,4 +129,4 @@ const LoginMembeR = () => {
   );
 };
 
-export default LoginMembeR;
+export default LoginMember;

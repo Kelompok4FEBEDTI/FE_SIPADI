@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'antd';
-import { Form } from 'react-bootstrap';
+import { Form, Alert } from 'react-bootstrap';
 import { getCookie } from '../../utils/cookie';
 import { memberService } from '../../services';
 
@@ -11,6 +11,7 @@ const EditFormMemberModals = ({ data }) => {
   const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const memberData = JSON.parse(getCookie('userData'));
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const EditFormMemberModals = ({ data }) => {
     setUsername(data.username_member);
     setJenisKelamin(data.jeniskelamin_member);
     setPassword(data.password_member);
-  }, []);
+  }, [data]);
 
   const showModal = () => {
     setVisible(true);
@@ -29,15 +30,13 @@ const EditFormMemberModals = ({ data }) => {
     data.jeniskelamin_member = jenisKelamin;
     data.nama_member = nama;
     data.username_member = username;
-    console.log(data);
     memberService
       .editMemberById(memberData.ID, data)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         window.location.replace('/profilemember');
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
       })
       .finally(() => {
         setLoading(false);
@@ -88,8 +87,10 @@ const EditFormMemberModals = ({ data }) => {
           style={{
             padding: '20px',
             margin: '20px',
+            border: error ? '2px solid red' : '2px solid white',
           }}
         >
+          {error && <Alert variant="danger">{`Error: ${error}`}</Alert>}
           <Form>
             <Form.Group controlId="formNama">
               <Form.Label>Nama</Form.Label>

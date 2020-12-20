@@ -4,29 +4,18 @@ import { Modal } from 'antd';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
 import { transaksiParkirService } from '../../services';
+import {
+  convertISO,
+  getDate,
+  getTime,
+  formatRupiah,
+} from '../../utils/baseFunction';
 
-const getDate = () => {
-  const today = new Date();
-
-  const date = `${today.getFullYear()}-${
-    today.getMonth() + 1
-  }-${today.getDate()}`;
-  return date;
-};
-
-const getTime = () => {
-  const today = new Date();
-  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-  return time;
-};
-
-const TransaksiKeluar = () => {
+const TransaksiKeluar = ({ isError }) => {
   const [dataTransaksi, setDataTransaksi] = useState();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(isError);
   const [loadingData, setLoadingData] = useState(false);
   const [karcis, setKarcis] = useState('');
-  const [modal, setModal] = useState(false);
-  const [dataTransaksiSukses, setDataTransaksiSukses] = useState(false);
 
   const hideError = () => {
     setError(false);
@@ -45,6 +34,7 @@ const TransaksiKeluar = () => {
         })
         .finally(() => {
           setLoadingData(false);
+          setKarcis();
         });
     } else {
       setError('Please Isi Form ID Karcis!');
@@ -55,85 +45,73 @@ const TransaksiKeluar = () => {
   const cariTarif = (a) => {
     const masuk = new Date(a);
     const now = new Date();
-    const jamMasuk = masuk.getHours();
+    const jamMasuk = masuk.getUTCHours();
+    const menitMasuk = masuk.getUTCMinutes();
     const jamSekarang = now.getHours();
-    let tarif = 4000;
-    const selisih = jamSekarang - jamMasuk;
-    if (selisih !== 0) {
-      tarif += tarif * selisih;
+    const menitSekarang = now.getMinutes();
+    const tarif = 4000;
+    const selisihJam = jamSekarang - jamMasuk;
+    const totalMenit = menitSekarang + menitMasuk;
+    let total = selisihJam;
+    if (Math.floor(totalMenit / 60) === 1) {
+      total += 1;
     }
-    return tarif;
+    return tarif * total;
+  };
+
+  const modalSuccess = (nopol, jam, tarif) => {
+    Modal.success({
+      title: 'Berhasil!!!',
+      centered: true,
+      content: `Mobil ${nopol} keluar pada jam ${jam} dengan tarif ${tarif}`,
+      onOK: setDataTransaksi(),
+    });
   };
 
   const bayarTransaksi = () => {
-    setModal(true);
     setLoadingData(true);
     const jamSekarang = `${getDate()} ${getTime()}`;
     const tarifParkir = cariTarif(dataTransaksi.jam_masuk);
-    if (karcis) {
-      const data = {
-        id_penjaga: dataTransaksi.id_penjaga,
-        id_member: dataTransaksi.id_member,
-        nomor_polisi: dataTransaksi.nomor_polisi,
-        jenis_mobil: dataTransaksi.jenis_mobil,
-        status_parkir: 'ParkirKeluar',
-        spot_parkir: dataTransaksi.spot_parkir,
-        jam_masuk: dataTransaksi.jam_masuk,
-        jam_keluar: jamSekarang,
-        tarif: tarifParkir,
-      };
+    if (dataTransaksi) {
       transaksiParkirService
-        .editTransaksiParkirByID(dataTransaksi._id, data)
-        .then((res) => {
-          setDataTransaksiSukses(res);
-        })
+        .editTransaksiParkirByID(
+          dataTransaksi._id,
+          dataTransaksi.id_penjaga,
+          dataTransaksi.id_member,
+          dataTransaksi.nomor_polisi,
+          dataTransaksi.jenis_mobil,
+          'ParkirKeluar',
+          dataTransaksi.spot_parkir,
+          dataTransaksi.jam_masuk,
+          jamSekarang,
+          tarifParkir
+        )
+        .then(
+          // eslint-disable-next-line camelcase
+          ({ nomor_polisi, tarif }) => {
+            modalSuccess(nomor_polisi, getTime(), tarif);
+          }
+        )
         .catch((err) => {
-          setError(err);
+          setError(err.message);
         })
         .finally(() => {
           setLoadingData(false);
         });
     } else {
       setLoadingData(false);
-      setError('Jangan kosong dong ani');
+      setError('Nomor karcis tidak boleh kosong');
     }
   };
 
   return (
-    <Container style={{ border: '1px solid lightgray', paddingTop: '20px' }}>
-      {modal && (
-        <Modal
-          centered
-          title="Edit Profile"
-          footer={[
-            <Button
-              type="primary"
-              danger
-              key="back"
-              onClick={() => {
-                return setModal(false);
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              onClick={() => {
-                return setModal(false);
-              }}
-            >
-              Update
-            </Button>,
-          ]}
-        >
-          <p>{dataTransaksiSukses.jenis_mobil}</p>
-          <p>{dataTransaksiSukses.nomor_mobil}</p>
-          <p>{dataTransaksiSukses.status_parkir}</p>
-          <p>{dataTransaksiSukses.jam_keluar}</p>
-          <p>{dataTransaksiSukses.tarif}</p>
-        </Modal>
-      )}
+    <Container
+      style={{
+        border: '1px solid lightgray',
+        paddingTop: '20px',
+        height: 'fit-content',
+      }}
+    >
       {error && (
         <div>
           <Alert onClick={hideError} variant="danger">
@@ -141,7 +119,6 @@ const TransaksiKeluar = () => {
           </Alert>
         </div>
       )}
-      {loadingData && <Loading />}
       <Row>
         <Col
           style={{
@@ -176,17 +153,10 @@ const TransaksiKeluar = () => {
                 </Col>
               </Row>
               <Row className="ket">
-                <Col md={{ span: 5 }}>Tanggal</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={{ span: 5 }}>
-                  {dataTransaksi.jam_masuk}
-                </Col>
-              </Row>
-              <Row className="ket">
                 <Col md={{ span: 5 }}>Waktu</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.jam_masuk}
+                  {convertISO(dataTransaksi.jam_masuk)}
                 </Col>
               </Row>
               <Row className="ket">
@@ -207,7 +177,11 @@ const TransaksiKeluar = () => {
                 <Col md={{ span: 5 }}>Tarif</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.tarif}
+                  {() => {
+                    const harga = cariTarif(dataTransaksi.jam_masuk);
+                    const showHarga = formatRupiah(harga);
+                    return showHarga;
+                  }}
                 </Col>
               </Row>
               <Row>
@@ -275,151 +249,8 @@ const TransaksiKeluar = () => {
             </div>
           )}
         </Col>
-        {/* <Col
-            style={{
-              backgroundColor: 'white',
-              paddingBottom: '20px',
-              paddingLeft: '25px',
-            }}
-            xs={12}
-            md={{}}
-          >
-            <div style={{ paddingLeft: '10px' }}>
-              <Form>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Control
-                    type="text"
-                    placeholder="Nomor Karcis"
-                    value={karcis}
-                    onChange={(e) => {
-                      setKarcis(e.target.value);
-                    }}
-                  />
-                </Form.Group>
-              </Form>
-            </div>
-            <Row className="ket">
-              <Col md={{ span: 5 }}>Nomor Polisi</Col>
-              <Col md={1}>:</Col>
-              <Col className="value" md={5}>
-                {dataTransaksi.nomor_polisi}
-              </Col>
-            </Row>
-            <Row className="ket">
-              <Col md={{ span: 5 }}>Jenis Mobil</Col>
-              <Col md={1}>:</Col>
-              <Col className="value" md={5}>
-                {dataTransaksi.jenis_mobil}
-              </Col>
-            </Row>
-            <Row className="ket">
-              <Col md={{ span: 5 }}>ID Member</Col>
-              <Col md={1}>:</Col>
-              <Col className="value" md={5}>
-                {dataTransaksi.id_member}
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            style={{
-              backgroundColor: 'white',
-              paddingBottom: '20px',
-              paddingLeft: '25px',
-            }}
-            xs={12}
-            md={{}}
-          >
-            <div style={{ paddingLeft: '10px' }}>
-              <Row className="ket">
-                <Col md={{ span: 5 }}>Tanggal</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={{ span: 5 }}>
-                  {dataTransaksi.jam_masuk}
-                </Col>
-              </Row>
-              <Row className="ket">
-                <Col md={{ span: 5 }}>Waktu</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={5}>
-                  {dataTransaksi.jam_masuk}
-                </Col>
-              </Row>
-              <Row className="ket">
-                <Col md={{ span: 5 }}>ID Penjaga</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={5}>
-                  {dataTransaksi.id_penjaga}
-                </Col>
-              </Row>
-              <Row className="ket">
-                <Col md={{ span: 5 }}>Spot Parkir</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={5}>
-                  {dataTransaksi.spot_parkir}
-                </Col>
-              </Row>
-              <Row style={{ marginBottom: '0' }} className="ket">
-                <Col md={{ span: 5 }}>Tarif</Col>
-                <Col md={1}>:</Col>
-                <Col className="value" md={5}>
-                  {dataTransaksi.tarif}
-                </Col>
-              </Row>
-              <Row style={{ margin: '1px', marginBottom: '2px' }}>
-                <Button
-                  variant="info"
-                  style={{
-                    border: '0',
-                    width: '100%',
-                    marginTop: '10px',
-                  }}
-                  type="button"
-                  disabled={loadingData}
-                  onClick={checkCarcis}
-                >
-                  Check Karcis
-                </Button>
-              </Row>
-              <Row>
-                <Col>
-                  <Button
-                    variant="danger"
-                    style={{
-                      border: '0',
-                      width: '100%',
-                      marginTop: '10px',
-                    }}
-                    type="button"
-                    disabled={loadingData}
-                    onClick={() => {
-                      setKarcis('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    // variant="danger"
-                    style={{
-                      border: '0',
-                      width: '100%',
-                      marginTop: '10px',
-                      backgroundColor: '#16D9D0',
-                    }}
-                    type="button"
-                    disabled={loadingData}
-                    onClick={() => {
-                      addTransaksiKeluar();
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </Col> */}
       </Row>
+      {loadingData && <Loading />}
     </Container>
   );
 };

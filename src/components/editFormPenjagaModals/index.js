@@ -37,7 +37,7 @@ const EditFormPenjagaModals = ({ data }) => {
         window.location.replace('/profilepenjagaparkir');
       })
       .catch((err) => {
-        setError(err);
+        setError(err.message);
       })
       .finally(() => {
         setLoading(false);

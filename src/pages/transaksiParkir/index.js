@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-import { Container, Form, Button, FormControl, Alert } from 'react-bootstrap';
+import {
+  Container,
+  Form,
+  Button,
+  FormControl,
+  Alert,
+  Card,
+} from 'react-bootstrap';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { TableTransaksi, Loading } from '../../components';
@@ -16,12 +23,11 @@ const JudulTransaksi = (props) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: '20px',
+        paddingTop: '5px',
       }}
     >
-      <div>
-        <h3>Transaksi Parkir</h3>
-        <p style={{ marginBottom: '20px', marginTop: '10px', color: 'red' }}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <p style={{ marginTop: '8px', marginLeft: '50px', color: 'green' }}>
           {`Total Data ${totalData}`}
         </p>
       </div>
@@ -68,7 +74,7 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '-8px' }}>
       <Form inline>
         <FormControl
           type="text"
@@ -86,37 +92,28 @@ const Search = () => {
       {loading && <Loading />}
       {error && <Alert variant="danger">{error}</Alert>}
       {data && (
-        <div
-          style={{
-            border: '2px solid black',
-            margin: '20px',
-            padding: '20px',
-            backgroundColor: '#fff312',
-            borderRadius: '10px',
-          }}
-        >
-          <h4>{`${data.jenis_mobil} - ${data.nomor_polisi}`}</h4>
-          <p>{data.status_parkir}</p>
-          <p>{data.spot_parkir}</p>
-          {member && (
-            <div
-              style={{
-                border: '2px solid black',
-                margin: '20px 5px',
-                padding: '20px 10px',
+        <div>
+          <Card style={{ margin: '20px 0' }}>
+            <Card.Header>Member Verivied !</Card.Header>
+            <Card.Body>
+              <Card.Title>{`${data.jenis_mobil} - ${data.nomor_polisi}`}</Card.Title>
+              <Card.Text>{`Status: ${data.status_parkir} - ${data.spot_parkir}`}</Card.Text>
+              {member && (
+                <div>
+                  <Card.Text>{`Pemilik : ${member.nama_member}`}</Card.Text>
+                  <Card.Text>{`Identiti : ${member.nik_member}`}</Card.Text>
+                </div>
+              )}
+            </Card.Body>
+            <Button
+              onClick={() => {
+                setData('');
               }}
+              style={{ margin: '20px' }}
             >
-              <p>{member.nama_member}</p>
-              <p>{member.nik_member}</p>
-            </div>
-          )}
-          <Button
-            onClick={() => {
-              setData('');
-            }}
-          >
-            Close
-          </Button>
+              OK
+            </Button>
+          </Card>
         </div>
       )}
     </div>
@@ -215,14 +212,13 @@ const TransaksiParkir = () => {
 
   return (
     <div>
-      <Container style={{ marginTop: '20px', padding: '20px' }}>
+      <Container style={{ marginTop: '8px', padding: '20px', paddingTop: '0' }}>
         <JudulTransaksi totalData={totalData} />
         <Search />
-        <div>
+        <div style={{ fontSize: '15px' }}>
           <Nav tabs>
             <NavItem>
               <NavLink
-                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '1' })}
                 onClick={() => {
                   setOffset(0);
@@ -236,7 +232,6 @@ const TransaksiParkir = () => {
             </NavItem>
             <NavItem>
               <NavLink
-                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '2' })}
                 onClick={() => {
                   setOffset(0);

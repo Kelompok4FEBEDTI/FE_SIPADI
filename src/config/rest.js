@@ -14,6 +14,7 @@ export default {
     }
     return endpoint;
   },
+  TRANSAKSI_PARKIR_MASUK: '/transaksi',
   TRANSAKSI_PARKIR_BY_ID: (id) => {
     return `/transaksi/${id}`;
   },
