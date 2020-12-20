@@ -136,16 +136,6 @@ const EditFormPenjagaModals = ({ data }) => {
                 }}
               />
             </Form.Group>
-            {/* <Button
-              style={{
-                backgroundColor: '#16D9D0',
-                border: '0',
-                width: '100%',
-              }}
-              type="submit"
-            >
-              Edit
-            </Button> */}
           </Form>
         </div>
       </Modal>

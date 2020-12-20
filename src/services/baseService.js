@@ -20,12 +20,13 @@ const createAxiosInterceptor = (url) => {
   });
   axiosCreate.interceptors.response.use(
     (response) => {
+      // console.log(response);
       return response.data;
     },
     (error) => {
-      if (error.response.status === 401) {
-        // window.location.replace('/');
-      }
+      // if (error.response.status === 401) {
+      // window.location.replace('/');
+      // }
       return Promise.reject(error);
     }
   );

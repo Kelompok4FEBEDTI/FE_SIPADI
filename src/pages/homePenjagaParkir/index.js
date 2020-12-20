@@ -23,8 +23,6 @@ const HomePenjagaParkir = () => {
       }}
       className="login"
     >
-      {/* <Link to="/loginmember">Login Member</Link>
-      <Link to="/loginpenjagaparkir">Login Penjaga Parkir</Link> */}
       <Nav tabs>
         <NavItem>
           <NavLink

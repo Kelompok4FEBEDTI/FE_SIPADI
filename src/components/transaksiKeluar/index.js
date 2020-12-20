@@ -1,103 +1,139 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Modal } from 'antd';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { Loading } from '..';
-import {
-  transaksiParkirService,
-  memberService,
-  penjagaService,
-} from '../../services';
+import { transaksiParkirService } from '../../services';
+
+const getDate = () => {
+  const today = new Date();
+
+  const date = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()}`;
+  return date;
+};
+
+const getTime = () => {
+  const today = new Date();
+  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+  return time;
+};
 
 const TransaksiKeluar = () => {
-  const [jamMasuk, setJamMasuk] = useState('');
-  const [biaya, setBiaya] = useState('');
   const [dataTransaksi, setDataTransaksi] = useState();
-  const [status, setStatus] = useState('');
-  const [karcis, setKarcis] = useState('');
-  const [namaPetugas, setNamaPetugas] = useState('');
-  const [nama, setNama] = useState('');
   const [error, setError] = useState(false);
-  const [msg, setMsg] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const [karcis, setKarcis] = useState('');
+  const [modal, setModal] = useState(false);
+  const [dataTransaksiSukses, setDataTransaksiSukses] = useState(false);
 
   const hideError = () => {
     setError(false);
   };
 
-  useEffect(() => {
-    setDataTransaksi();
-    setNamaPetugas();
-    setNama('');
-    setStatus('');
-    setLoadingData(false);
-  }, [karcis]);
-
-  const getData = () => {
+  const checkCarcis = () => {
+    setLoadingData(true);
     if (karcis.length > 0) {
-      // setLoadingData(true);
       transaksiParkirService
         .getTransaksiParkirById(karcis)
         .then((res) => {
           setDataTransaksi(res);
-          setJamMasuk(new Date(0).toISOString());
-          setBiaya(6000);
         })
         .catch((err) => {
-          setError(err);
-        });
-      memberService
-        .viewMemberByNopol('DD 1453 SS')
-        .then((res) => {
-          setNama(res[0].nama_member);
+          setError(err.message);
         })
-        .catch((err) => {
-          setError(err);
+        .finally(() => {
+          setLoadingData(false);
         });
-      penjagaService
-        .viewPenjagaByID('5fdd7b80e3531a0017ed297a')
-        .then((res) => {
-          setNamaPetugas(res.nama);
-          setStatus('ParkirKeluar');
-        })
-        .catch((err) => {
-          setError(err);
-        });
-      // .finally(() => {
-      //   setLoadingData(true);
-      // });
+    } else {
+      setError('Please Isi Form ID Karcis!');
+      setLoadingData(false);
     }
-    setDataTransaksi();
-    setNamaPetugas();
-    setNama('');
-    setStatus('');
   };
 
-  useEffect(() => {});
+  const cariTarif = (a) => {
+    const masuk = new Date(a);
+    const now = new Date();
+    const jamMasuk = masuk.getHours();
+    const jamSekarang = now.getHours();
+    let tarif = 4000;
+    const selisih = jamSekarang - jamMasuk;
+    if (selisih !== 0) {
+      tarif += tarif * selisih;
+    }
+    return tarif;
+  };
 
-  const onsubmitKeluar = () => {
-    const data = {
-      id_penjaga: dataTransaksi.id_penjaga,
-      id_member: dataTransaksi.id_member,
-      nomor_polisi: dataTransaksi.nomor_polisi,
-      jenis_mobil: dataTransaksi.jenis_mobil,
-      status_parkir: 'ParkirKeluar',
-      spot_parkir: dataTransaksi.spot_parkir,
-      jam_masuk: dataTransaksi.jam_masuk,
-      jam_keluar: new Date(0),
-      tari: biaya,
-    };
-    transaksiParkirService
-      .editTransaksiParkirByID(dataTransaksi._id, data)
-      .then(() => {
-        setMsg('Transaksi Berhasil');
-      })
-      .catch((err) => {
-        setError(err);
-      });
+  const bayarTransaksi = () => {
+    setModal(true);
+    setLoadingData(true);
+    const jamSekarang = `${getDate()} ${getTime()}`;
+    const tarifParkir = cariTarif(dataTransaksi.jam_masuk);
+    if (karcis) {
+      const data = {
+        id_penjaga: dataTransaksi.id_penjaga,
+        id_member: dataTransaksi.id_member,
+        nomor_polisi: dataTransaksi.nomor_polisi,
+        jenis_mobil: dataTransaksi.jenis_mobil,
+        status_parkir: 'ParkirKeluar',
+        spot_parkir: dataTransaksi.spot_parkir,
+        jam_masuk: dataTransaksi.jam_masuk,
+        jam_keluar: jamSekarang,
+        tarif: tarifParkir,
+      };
+      transaksiParkirService
+        .editTransaksiParkirByID(dataTransaksi._id, data)
+        .then((res) => {
+          setDataTransaksiSukses(res);
+        })
+        .catch((err) => {
+          setError(err);
+        })
+        .finally(() => {
+          setLoadingData(false);
+        });
+    } else {
+      setLoadingData(false);
+      setError('Jangan kosong dong ani');
+    }
   };
 
   return (
     <Container style={{ border: '1px solid lightgray', paddingTop: '20px' }}>
+      {modal && (
+        <Modal
+          centered
+          title="Edit Profile"
+          footer={[
+            <Button
+              type="primary"
+              danger
+              key="back"
+              onClick={() => {
+                return setModal(false);
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              onClick={() => {
+                return setModal(false);
+              }}
+            >
+              Update
+            </Button>,
+          ]}
+        >
+          <p>{dataTransaksiSukses.jenis_mobil}</p>
+          <p>{dataTransaksiSukses.nomor_mobil}</p>
+          <p>{dataTransaksiSukses.status_parkir}</p>
+          <p>{dataTransaksiSukses.jam_keluar}</p>
+          <p>{dataTransaksiSukses.tarif}</p>
+        </Modal>
+      )}
       {error && (
         <div>
           <Alert onClick={hideError} variant="danger">
@@ -105,18 +141,141 @@ const TransaksiKeluar = () => {
           </Alert>
         </div>
       )}
-      {msg && (
-        <div>
-          <Alert onClick={hideError} variant="danger">
-            {msg}
-          </Alert>
-        </div>
-      )}
-      {loadingData ? (
-        <Loading />
-      ) : (
-        <Row>
-          <Col
+      {loadingData && <Loading />}
+      <Row>
+        <Col
+          style={{
+            backgroundColor: 'white',
+            paddingBottom: '20px',
+            paddingLeft: '25px',
+          }}
+          xs={12}
+          md={{}}
+        >
+          {dataTransaksi ? (
+            <div style={{ paddingLeft: '10px' }}>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>Nomor Polisi</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.nomor_polisi}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>Jenis Mobil</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.jenis_mobil}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>ID Member</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.id_member}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>Tanggal</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={{ span: 5 }}>
+                  {dataTransaksi.jam_masuk}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>Waktu</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.jam_masuk}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>ID Penjaga</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.id_penjaga}
+                </Col>
+              </Row>
+              <Row className="ket">
+                <Col md={{ span: 5 }}>Spot Parkir</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.spot_parkir}
+                </Col>
+              </Row>
+              <Row style={{ marginBottom: '0' }} className="ket">
+                <Col md={{ span: 5 }}>Tarif</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
+                  {dataTransaksi.tarif}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Button
+                    variant="danger"
+                    style={{
+                      border: '0',
+                      width: '100%',
+                      marginTop: '10px',
+                    }}
+                    type="button"
+                    disabled={loadingData}
+                    onClick={() => {
+                      setDataTransaksi('');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    style={{
+                      border: '0',
+                      width: '100%',
+                      marginTop: '10px',
+                      backgroundColor: '#16D9D0',
+                    }}
+                    type="button"
+                    disabled={loadingData}
+                    onClick={bayarTransaksi}
+                  >
+                    Bayar
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ) : (
+            <div style={{ paddingLeft: '10px' }}>
+              <Form>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Control
+                    type="text"
+                    placeholder="Nomor Karcis"
+                    value={karcis}
+                    onChange={(e) => {
+                      setKarcis(e.target.value);
+                    }}
+                  />
+                </Form.Group>
+              </Form>
+              <Button
+                variant="info"
+                style={{
+                  border: '0',
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+                type="button"
+                disabled={loadingData}
+                onClick={checkCarcis}
+              >
+                Check Karcis
+              </Button>
+            </div>
+          )}
+        </Col>
+        {/* <Col
             style={{
               backgroundColor: 'white',
               paddingBottom: '20px',
@@ -126,7 +285,7 @@ const TransaksiKeluar = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              <Form onSubmit={onsubmitKeluar()}>
+              <Form>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Control
                     type="text"
@@ -140,24 +299,24 @@ const TransaksiKeluar = () => {
               </Form>
             </div>
             <Row className="ket">
-              <Col md={{ span: 5 }}>Nomor Kendaraan</Col>
+              <Col md={{ span: 5 }}>Nomor Polisi</Col>
               <Col md={1}>:</Col>
               <Col className="value" md={5}>
-                {dataTransaksi ? dataTransaksi.nomor_polisi : ''}
+                {dataTransaksi.nomor_polisi}
               </Col>
             </Row>
             <Row className="ket">
               <Col md={{ span: 5 }}>Jenis Mobil</Col>
               <Col md={1}>:</Col>
               <Col className="value" md={5}>
-                {dataTransaksi ? dataTransaksi.jenis_mobil : ''}
+                {dataTransaksi.jenis_mobil}
               </Col>
             </Row>
             <Row className="ket">
-              <Col md={{ span: 5 }}>Nama Pemilik</Col>
+              <Col md={{ span: 5 }}>ID Member</Col>
               <Col md={1}>:</Col>
               <Col className="value" md={5}>
-                {nama}
+                {dataTransaksi.id_member}
               </Col>
             </Row>
           </Col>
@@ -171,39 +330,39 @@ const TransaksiKeluar = () => {
             md={{}}
           >
             <div style={{ paddingLeft: '10px' }}>
-              {/* <Row className="ket">
+              <Row className="ket">
                 <Col md={{ span: 5 }}>Tanggal</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={{ span: 5 }}>
-                  {}
+                  {dataTransaksi.jam_masuk}
                 </Col>
-              </Row> */}
+              </Row>
               <Row className="ket">
                 <Col md={{ span: 5 }}>Waktu</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {jamMasuk}
+                  {dataTransaksi.jam_masuk}
                 </Col>
               </Row>
               <Row className="ket">
-                <Col md={{ span: 5 }}>Petugas</Col>
+                <Col md={{ span: 5 }}>ID Penjaga</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {namaPetugas || ''}
+                  {dataTransaksi.id_penjaga}
                 </Col>
               </Row>
               <Row className="ket">
-                <Col md={{ span: 5 }}>Status</Col>
+                <Col md={{ span: 5 }}>Spot Parkir</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {status}
+                  {dataTransaksi.spot_parkir}
                 </Col>
               </Row>
               <Row style={{ marginBottom: '0' }} className="ket">
-                <Col md={{ span: 5 }}>Total Biaya</Col>
+                <Col md={{ span: 5 }}>Tarif</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {biaya}
+                  {dataTransaksi.tarif}
                 </Col>
               </Row>
               <Row style={{ margin: '1px', marginBottom: '2px' }}>
@@ -216,11 +375,9 @@ const TransaksiKeluar = () => {
                   }}
                   type="button"
                   disabled={loadingData}
-                  onClick={() => {
-                    getData();
-                  }}
+                  onClick={checkCarcis}
                 >
-                  Get Data
+                  Check Karcis
                 </Button>
               </Row>
               <Row>
@@ -253,7 +410,7 @@ const TransaksiKeluar = () => {
                     type="button"
                     disabled={loadingData}
                     onClick={() => {
-                      onsubmitKeluar();
+                      addTransaksiKeluar();
                     }}
                   >
                     Submit
@@ -261,9 +418,8 @@ const TransaksiKeluar = () => {
                 </Col>
               </Row>
             </div>
-          </Col>
-        </Row>
-      )}
+          </Col> */}
+      </Row>
     </Container>
   );
 };

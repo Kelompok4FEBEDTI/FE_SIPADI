@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'antd';
 import { Form, Alert } from 'react-bootstrap';
 import { memberService } from '../../services';
-import { getCookie } from '../../utils/cookie';
-// import { Loading } from '..';
 
-const AddFormMobilModals = () => {
+const AddFormMobilModals = ({ idMember }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [nopol, setNopol] = useState('');
   const [jenis, setJenis] = useState('');
   const [error, setError] = useState('');
-
-  const memberData = JSON.parse(getCookie('userData'));
 
   const showModal = () => {
     setVisible(true);
@@ -25,7 +21,7 @@ const AddFormMobilModals = () => {
   const handleOk = () => {
     setLoading(true);
     memberService
-      .addMobilById(memberData.ID, nopol, jenis)
+      .addMobilById(idMember, nopol, jenis)
       .then(() => {
         handleCancel();
         window.location.replace('/profilemember');
@@ -36,13 +32,7 @@ const AddFormMobilModals = () => {
       .finally(() => {
         setLoading(false);
       });
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setVisible(false);
-    // }, 3000);
   };
-
-  // useEffect(() => {}, [nopol, jenis]);
 
   return (
     <>

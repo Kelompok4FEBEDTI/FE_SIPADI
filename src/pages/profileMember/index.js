@@ -18,15 +18,14 @@ const ProfileMember = () => {
   const [error, setError] = useState();
   const [pesan, setPesan] = useState();
 
-  const memberData = JSON.parse(getCookie('userData'));
+  const { ID } = JSON.parse(getCookie('userData'));
 
   useEffect(() => {
     setLoading(true);
     memberService
-      .viewMemberByID(memberData.ID)
+      .viewMemberByID(ID)
       .then((res) => {
         setDataMember(res);
-        // console.log(res[0]);
       })
       .catch((err) => {
         setError(err);
@@ -34,7 +33,7 @@ const ProfileMember = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [memberData.ID]);
+  }, [ID]);
 
   const deleteMobil = (idMobil) => {
     memberService
@@ -66,7 +65,6 @@ const ProfileMember = () => {
     >
       {error && <p>{error}</p>}
       {pesan && <p>{pesan}</p>}
-      {/* {loading && <p>Loading...</p>} */}
       {dataMember && !loading ? (
         <div
           style={{
@@ -99,8 +97,6 @@ const ProfileMember = () => {
                 {dataMember.nama_member}
               </Col>
             </Row>
-            {/* <p>{`NIK : ${dataMember.nik_member}`}</p>
-            <p>{`Nama : ${dataMember.nama_member}`}</p> */}
           </div>
           <div>
             {dataMember.mobil && (
@@ -152,7 +148,7 @@ const ProfileMember = () => {
                     <td />
                     <td />
                     <td>
-                      <AddFormMobilModals />
+                      <AddFormMobilModals idMember={ID} />
                     </td>
                   </tr>
                 </tbody>

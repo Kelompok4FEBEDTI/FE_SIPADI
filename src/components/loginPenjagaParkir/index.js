@@ -10,7 +10,6 @@ const LoginPenjagaParkir = () => {
   const [password, setPassword] = useState();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [sukses, setSukses] = useState(false);
 
   const validation = () => {
     if (username && password) {
@@ -33,7 +32,6 @@ const LoginPenjagaParkir = () => {
           };
           setCookie('userData', JSON.stringify(cookieUser), 10000);
           setCookie('token', JSON.stringify(cookieToken), 10000);
-          setSukses(true);
         })
         .catch((err) => {
           setError(err.message);
@@ -42,8 +40,7 @@ const LoginPenjagaParkir = () => {
           setUsername('');
           setPassword('');
           setLoading(false);
-          if (sukses) {
-            console.log('Sukses');
+          if (!error) {
             window.location.replace('/homepenjagaparkir');
           }
         });

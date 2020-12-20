@@ -7,15 +7,11 @@ import { memberService } from '../../services';
 const EditFormMemberModals = ({ data }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [nik, setNik] = useState('');
   const [nama, setNama] = useState('');
   const [jenisKelamin, setJenisKelamin] = useState('Man');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const memberData = JSON.parse(getCookie('userData'));
-  // console.log(data);
-  // // data.mobil = [];
-  // console.log('INI', data);
 
   useEffect(() => {
     setNama(data.nama_member);

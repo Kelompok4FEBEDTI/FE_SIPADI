@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import { Container, Form, Button, FormControl, Alert } from 'react-bootstrap';
 import classnames from 'classnames';
-// import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { TableTransaksi, Loading } from '../../components';
 import { transaksiParkirService, memberService } from '../../services';
@@ -133,17 +132,12 @@ const TransaksiParkir = () => {
   const [totalData, setTotalData] = useState('');
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState('');
-  // const [pageCount, setPageCount] = useState();
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
   const fetchDataTransaksiAll = () => {
-    // console.log('Hai iklas All');
-    // setDataTransaksi([]);
-    // setError(false);
-    // setPageCount(0);
     setLoading(true);
     transaksiParkirService
       .getTransaksiParkir(offset, limit)

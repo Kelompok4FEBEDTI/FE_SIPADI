@@ -5,6 +5,7 @@ import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import routes from './config/routes';
 import { isUserAuthenticated, isPenjagaParkirToken } from './utils/cookie';
 import { Header } from './components';
+import { Login } from './pages';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -27,7 +28,24 @@ const App = () => {
       <Header isPenjaga={isPenjagaParkirToken()} show={isUserAuthenticated()} />
       <Switch>
         {routes.map((route) => {
-          if (route.isPublic) {
+          if (route.component === 'Login') {
+            return (
+              <Route>
+                {isUserAuthenticated ? (
+                  <Redirect
+                    to={
+                      isPenjagaParkirToken() ?
+                        '/homepenjagaparkir' :
+                        '/profilemember'
+                    }
+                  />
+                ) : (
+                  <Login />
+                )}
+              </Route>
+            );
+          }
+          if (route.isPublic && route.component !== 'Login') {
             return (
               <Route
                 path={route.path}
