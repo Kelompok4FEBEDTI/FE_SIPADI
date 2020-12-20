@@ -30,9 +30,9 @@ const getTime = () => {
   return time;
 };
 
-const TransaksiMasuk = () => {
+const TransaksiMasuk = ({ isError }) => {
   const [infoMember, setInfoMember] = useState();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(isError);
   const [loadingData, setLoadingData] = useState(false);
   const [nopol, setNopol] = useState('');
   const [mobil, setMobil] = useState();
@@ -44,23 +44,24 @@ const TransaksiMasuk = () => {
   const addParkir = () => {
     setLoadingData(true);
     transaksiParkirService
-      .addTransaksiParkir({
-        id_penjaga: ID,
-        id_member: infoMember._id,
-        nomor_polisi: nopol,
-        jenis_mobil: mobil.jenis_mobil,
-        status_parkir: status,
-        spot_parkir: 'E27',
-        jam_masuk: jamMasuk,
-        jam_keluar: jamMasuk,
-        tarif: 4000,
-      })
+      .addTransaksiParkir(
+        ID,
+        infoMember._id,
+        nopol,
+        mobil.jenis_mobil,
+        status,
+        'E27',
+        jamMasuk,
+        jamMasuk,
+        4000
+      )
       .then((res) => {
         setSukses(`No Karcis : ${res._id}`);
         setInfoMember('');
         setMobil();
         setJamMasuk('');
         setStatus('');
+        setNopol('');
       })
       .catch((err) => {
         setError(err.message);
@@ -91,11 +92,11 @@ const TransaksiMasuk = () => {
             setStatus('ParkirMasuk');
           } else {
             setError('Data tidak ditemukan');
+            setNopol('');
           }
         })
         .catch((err) => {
-          setError(err);
-          setNopol('');
+          setError(err.message);
         })
         .finally(() => {
           setLoadingData(false);
@@ -181,13 +182,9 @@ const TransaksiMasuk = () => {
             {infoMember && mobil && (
               <Col>
                 <Card>
-                  <Card.Header>User Verivied !</Card.Header>
+                  <Card.Header>Member Verivied !</Card.Header>
                   <Card.Body>
                     <Card.Title>{infoMember.nama_member}</Card.Title>
-                    <Card.Text>
-                      Some quick example text to build on the card title and
-                      make up the bulk of the cards content.
-                    </Card.Text>
                     <Card.Text>
                       {mobil && `${mobil.jenis_mobil} - ${nopol}`}
                     </Card.Text>

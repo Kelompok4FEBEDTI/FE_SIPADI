@@ -48,10 +48,10 @@ const HomePenjagaParkir = () => {
       </Nav>
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
-          <TransaksiMasuk />
+          <TransaksiMasuk isError={false} />
         </TabPane>
         <TabPane tabId="2">
-          <TransaksiKeluar />
+          <TransaksiKeluar isError={false} />
         </TabPane>
       </TabContent>
     </Container>

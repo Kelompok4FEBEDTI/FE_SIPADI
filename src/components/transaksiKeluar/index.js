@@ -21,13 +21,13 @@ const getTime = () => {
   return time;
 };
 
-const TransaksiKeluar = () => {
+const TransaksiKeluar = ({ isError }) => {
   const [dataTransaksi, setDataTransaksi] = useState();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(isError);
   const [loadingData, setLoadingData] = useState(false);
   const [karcis, setKarcis] = useState('');
-  const [modal, setModal] = useState(false);
-  const [dataTransaksiSukses, setDataTransaksiSukses] = useState(false);
+  // const [modal, setModal] = useState(false);
+  // const [dataTransaksiSukses, setDataTransaksiSukses] = useState(false);
 
   const hideError = () => {
     setError(false);
@@ -46,6 +46,7 @@ const TransaksiKeluar = () => {
         })
         .finally(() => {
           setLoadingData(false);
+          setKarcis();
         });
     } else {
       setError('Please Isi Form ID Karcis!');
@@ -56,47 +57,65 @@ const TransaksiKeluar = () => {
   const cariTarif = (a) => {
     const masuk = new Date(a);
     const now = new Date();
-    const jamMasuk = masuk.getHours();
+    const jamMasuk = masuk.getUTCHours();
+    const menitMasuk = masuk.getUTCMinutes();
     const jamSekarang = now.getHours();
-    let tarif = 4000;
-    const selisih = jamSekarang - jamMasuk;
-    if (selisih !== 0) {
-      tarif += tarif * selisih;
+    const menitSekarang = now.getMinutes();
+    const tarif = 4000;
+    const selisihJam = jamSekarang - jamMasuk;
+    const totalMenit = menitSekarang + menitMasuk;
+    let total = selisihJam;
+    if (Math.floor(totalMenit / 60) === 1) {
+      total += 1;
     }
-    return tarif;
+    return tarif * total;
+  };
+
+  const modalSuccess = (nopol, jam, tarif) => {
+    Modal.success({
+      title: 'Berhasil!!!',
+      centered: true,
+      content: `Mobil ${nopol} keluar pada jam ${jam} dengan tarif ${tarif}`,
+      onOK: setDataTransaksi(),
+    });
   };
 
   const bayarTransaksi = () => {
-    setModal(true);
+    // setModal(true);
     setLoadingData(true);
     const jamSekarang = `${getDate()} ${getTime()}`;
     const tarifParkir = cariTarif(dataTransaksi.jam_masuk);
-    if (karcis) {
-      const data = {
-        id_penjaga: dataTransaksi.id_penjaga,
-        id_member: dataTransaksi.id_member,
-        nomor_polisi: dataTransaksi.nomor_polisi,
-        jenis_mobil: dataTransaksi.jenis_mobil,
-        status_parkir: 'ParkirKeluar',
-        spot_parkir: dataTransaksi.spot_parkir,
-        jam_masuk: dataTransaksi.jam_masuk,
-        jam_keluar: jamSekarang,
-        tarif: tarifParkir,
-      };
+    if (dataTransaksi) {
       transaksiParkirService
-        .editTransaksiParkirByID(dataTransaksi._id, data)
-        .then((res) => {
-          setDataTransaksiSukses(res);
-        })
+        .editTransaksiParkirByID(
+          dataTransaksi._id,
+          dataTransaksi.id_penjaga,
+          dataTransaksi.id_member,
+          dataTransaksi.nomor_polisi,
+          dataTransaksi.jenis_mobil,
+          'ParkirKeluar',
+          dataTransaksi.spot_parkir,
+          dataTransaksi.jam_masuk,
+          jamSekarang,
+          tarifParkir
+        )
+        .then(
+          // eslint-disable-next-line camelcase
+          ({ nomor_polisi, tarif }) => {
+            // setDataTransaksiSukses(res);
+            modalSuccess(nomor_polisi, getTime(), tarif);
+            // setModal(true);
+          }
+        )
         .catch((err) => {
-          setError(err);
+          setError(err.message);
         })
         .finally(() => {
           setLoadingData(false);
         });
     } else {
       setLoadingData(false);
-      setError('Jangan kosong dong ani');
+      setError('Nomor karcis tidak boleh kosong');
     }
   };
 
@@ -108,39 +127,6 @@ const TransaksiKeluar = () => {
         height: 'fit-content',
       }}
     >
-      {modal && (
-        <Modal
-          centered
-          title="Edit Profile"
-          footer={[
-            <Button
-              type="primary"
-              danger
-              key="back"
-              onClick={() => {
-                return setModal(false);
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              onClick={() => {
-                return setModal(false);
-              }}
-            >
-              Update
-            </Button>,
-          ]}
-        >
-          <p>{dataTransaksiSukses.jenis_mobil}</p>
-          <p>{dataTransaksiSukses.nomor_mobil}</p>
-          <p>{dataTransaksiSukses.status_parkir}</p>
-          <p>{dataTransaksiSukses.jam_keluar}</p>
-          <p>{dataTransaksiSukses.tarif}</p>
-        </Modal>
-      )}
       {error && (
         <div>
           <Alert onClick={hideError} variant="danger">
@@ -213,7 +199,7 @@ const TransaksiKeluar = () => {
                 <Col md={{ span: 5 }}>Tarif</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.tarif}
+                  {cariTarif(dataTransaksi.jam_masuk)}
                 </Col>
               </Row>
               <Row>
