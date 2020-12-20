@@ -16,12 +16,12 @@ const JudulTransaksi = (props) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: '20px',
+        paddingTop: '5px',
       }}
     >
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
         <h3>Transaksi Parkir</h3>
-        <p style={{ marginBottom: '20px', marginTop: '10px', color: 'red' }}>
+        <p style={{ marginTop: '8px', marginLeft: '50px', color: 'red' }}>
           {`Total Data ${totalData}`}
         </p>
       </div>
@@ -68,7 +68,7 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '-8px' }}>
       <Form inline>
         <FormControl
           type="text"
@@ -215,14 +215,13 @@ const TransaksiParkir = () => {
 
   return (
     <div>
-      <Container style={{ marginTop: '20px', padding: '20px' }}>
+      <Container style={{ marginTop: '8px', padding: '20px', paddingTop: '0' }}>
         <JudulTransaksi totalData={totalData} />
         <Search />
-        <div>
+        <div style={{ fontSize: '15px' }}>
           <Nav tabs>
             <NavItem>
               <NavLink
-                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '1' })}
                 onClick={() => {
                   setOffset(0);
@@ -236,7 +235,6 @@ const TransaksiParkir = () => {
             </NavItem>
             <NavItem>
               <NavLink
-                style={{ color: 'black' }}
                 className={classnames({ active: activeTab === '2' })}
                 onClick={() => {
                   setOffset(0);

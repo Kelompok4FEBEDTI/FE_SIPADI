@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
+import Func from '../../utils/baseFunction';
 
 const ListTransaksi = ({ data, index }) => {
   return (
@@ -8,8 +9,8 @@ const ListTransaksi = ({ data, index }) => {
       <td>{data.nomor_polisi}</td>
       <td>{data.jenis_mobil}</td>
       <td>{data.spot_parkir}</td>
-      <td>{data.jam_masuk}</td>
-      <td>{data.jam_keluar}</td>
+      <td>{Func.convertISO(data.jam_masuk)}</td>
+      <td>{Func.convertISO(data.jam_keluar)}</td>
       <td>{data.tarif}</td>
       <td>{data.status_parkir}</td>
     </tr>
@@ -19,8 +20,13 @@ const ListTransaksi = ({ data, index }) => {
 const TableTransaksi = ({ data }) => {
   return (
     <div>
-      <Table striped bordered hover>
-        <thead>
+      <Table
+        style={{ fontSize: '13px', textAlign: 'center' }}
+        striped
+        bordered
+        hover
+      >
+        <thead style={{ fontSize: '14px', textAlign: 'center' }}>
           <tr>
             <th>No</th>
             <th>No Polisi</th>

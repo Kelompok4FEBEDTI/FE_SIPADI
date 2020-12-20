@@ -61,6 +61,13 @@ const Loading = () => {
         borderRadius: '100',
         display: 'flex',
         flexDirection: 'column',
+        margin: '0',
+        position: 'absolute',
+        top: '45%',
+        left: '50%',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        // backgroundColor: 'unset',
       }}
     >
       <lottie-player
@@ -72,7 +79,9 @@ const Loading = () => {
         // controls
         autoplay
       />
-      <p>Mohon menunggu...</p>
+      <p className="text-center" style={{ marginTop: '-70px' }}>
+        Mohon menunggu...
+      </p>
     </div>
   );
 };

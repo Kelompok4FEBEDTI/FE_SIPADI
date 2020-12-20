@@ -112,7 +112,7 @@ const TransaksiMasuk = () => {
         justifyContent: 'center',
         alignItems: 'center',
         minHeeight: '400px',
-        maxHeight: '600px',
+        height: '250px',
       }}
     >
       {error && (

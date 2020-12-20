@@ -100,7 +100,13 @@ const TransaksiKeluar = () => {
   };
 
   return (
-    <Container style={{ border: '1px solid lightgray', paddingTop: '20px' }}>
+    <Container
+      style={{
+        border: '1px solid lightgray',
+        paddingTop: '20px',
+        height: '250px',
+      }}
+    >
       {modal && (
         <Modal
           centered
