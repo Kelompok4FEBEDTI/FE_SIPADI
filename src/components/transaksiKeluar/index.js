@@ -104,7 +104,7 @@ const TransaksiKeluar = () => {
       style={{
         border: '1px solid lightgray',
         paddingTop: '20px',
-        height: '250px',
+        height: 'fit-content',
       }}
     >
       {modal && (
@@ -147,7 +147,6 @@ const TransaksiKeluar = () => {
           </Alert>
         </div>
       )}
-      {loadingData && <Loading />}
       <Row>
         <Col
           style={{
@@ -289,123 +288,123 @@ const TransaksiKeluar = () => {
             }}
             xs={12}
             md={{}}
-          >
+            >
             <div style={{ paddingLeft: '10px' }}>
-              <Form>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Control
-                    type="text"
-                    placeholder="Nomor Karcis"
-                    value={karcis}
-                    onChange={(e) => {
-                      setKarcis(e.target.value);
-                    }}
-                  />
-                </Form.Group>
-              </Form>
+            <Form>
+            <Form.Group controlId="formBasicEmail">
+            <Form.Control
+            type="text"
+            placeholder="Nomor Karcis"
+            value={karcis}
+            onChange={(e) => {
+              setKarcis(e.target.value);
+            }}
+            />
+            </Form.Group>
+            </Form>
             </div>
             <Row className="ket">
-              <Col md={{ span: 5 }}>Nomor Polisi</Col>
-              <Col md={1}>:</Col>
-              <Col className="value" md={5}>
-                {dataTransaksi.nomor_polisi}
-              </Col>
+            <Col md={{ span: 5 }}>Nomor Polisi</Col>
+            <Col md={1}>:</Col>
+            <Col className="value" md={5}>
+            {dataTransaksi.nomor_polisi}
+            </Col>
             </Row>
             <Row className="ket">
-              <Col md={{ span: 5 }}>Jenis Mobil</Col>
+            <Col md={{ span: 5 }}>Jenis Mobil</Col>
               <Col md={1}>:</Col>
               <Col className="value" md={5}>
                 {dataTransaksi.jenis_mobil}
-              </Col>
-            </Row>
-            <Row className="ket">
-              <Col md={{ span: 5 }}>ID Member</Col>
-              <Col md={1}>:</Col>
-              <Col className="value" md={5}>
+                </Col>
+                </Row>
+                <Row className="ket">
+                <Col md={{ span: 5 }}>ID Member</Col>
+                <Col md={1}>:</Col>
+                <Col className="value" md={5}>
                 {dataTransaksi.id_member}
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            style={{
-              backgroundColor: 'white',
-              paddingBottom: '20px',
-              paddingLeft: '25px',
-            }}
-            xs={12}
-            md={{}}
-          >
-            <div style={{ paddingLeft: '10px' }}>
-              <Row className="ket">
+                </Col>
+                </Row>
+                </Col>
+                <Col
+                style={{
+                  backgroundColor: 'white',
+                  paddingBottom: '20px',
+                  paddingLeft: '25px',
+                }}
+                xs={12}
+                md={{}}
+                >
+                <div style={{ paddingLeft: '10px' }}>
+                <Row className="ket">
                 <Col md={{ span: 5 }}>Tanggal</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={{ span: 5 }}>
-                  {dataTransaksi.jam_masuk}
+                {dataTransaksi.jam_masuk}
                 </Col>
-              </Row>
-              <Row className="ket">
+                </Row>
+                <Row className="ket">
                 <Col md={{ span: 5 }}>Waktu</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.jam_masuk}
+                {dataTransaksi.jam_masuk}
                 </Col>
-              </Row>
-              <Row className="ket">
+                </Row>
+                <Row className="ket">
                 <Col md={{ span: 5 }}>ID Penjaga</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.id_penjaga}
+                {dataTransaksi.id_penjaga}
                 </Col>
-              </Row>
-              <Row className="ket">
+                </Row>
+                <Row className="ket">
                 <Col md={{ span: 5 }}>Spot Parkir</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.spot_parkir}
+                {dataTransaksi.spot_parkir}
                 </Col>
-              </Row>
-              <Row style={{ marginBottom: '0' }} className="ket">
+                </Row>
+                <Row style={{ marginBottom: '0' }} className="ket">
                 <Col md={{ span: 5 }}>Tarif</Col>
                 <Col md={1}>:</Col>
                 <Col className="value" md={5}>
-                  {dataTransaksi.tarif}
+                {dataTransaksi.tarif}
                 </Col>
-              </Row>
-              <Row style={{ margin: '1px', marginBottom: '2px' }}>
+                </Row>
+                <Row style={{ margin: '1px', marginBottom: '2px' }}>
                 <Button
-                  variant="info"
-                  style={{
-                    border: '0',
-                    width: '100%',
-                    marginTop: '10px',
-                  }}
-                  type="button"
-                  disabled={loadingData}
-                  onClick={checkCarcis}
+                variant="info"
+                style={{
+                  border: '0',
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+                type="button"
+                disabled={loadingData}
+                onClick={checkCarcis}
                 >
-                  Check Karcis
+                Check Karcis
                 </Button>
-              </Row>
-              <Row>
+                </Row>
+                <Row>
                 <Col>
-                  <Button
-                    variant="danger"
-                    style={{
-                      border: '0',
-                      width: '100%',
-                      marginTop: '10px',
-                    }}
-                    type="button"
-                    disabled={loadingData}
-                    onClick={() => {
+                <Button
+                variant="danger"
+                style={{
+                  border: '0',
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+                type="button"
+                disabled={loadingData}
+                onClick={() => {
                       setKarcis('');
                     }}
-                  >
+                    >
                     Cancel
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
+                    </Button>
+                    </Col>
+                    <Col>
+                    <Button
                     // variant="danger"
                     style={{
                       border: '0',
@@ -419,13 +418,14 @@ const TransaksiKeluar = () => {
                       addTransaksiKeluar();
                     }}
                   >
-                    Submit
+                  Submit
                   </Button>
-                </Col>
-              </Row>
-            </div>
-          </Col> */}
+                  </Col>
+                  </Row>
+                  </div>
+                </Col> */}
       </Row>
+      {loadingData && <Loading />}
     </Container>
   );
 };

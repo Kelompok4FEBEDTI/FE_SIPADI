@@ -29,7 +29,7 @@ const SpotParkir = () => {
 
   return (
     <div>
-      <Container style={{ marginTop: '20px' }}>
+      <Container style={{ marginTop: '20px', backgroundColor: 'unset' }}>
         {loading && Loading}
         {error && renderError}
         {data && <SpotParkirComponent data={data} />}

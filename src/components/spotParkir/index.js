@@ -14,7 +14,7 @@ const ListSpotParkir = ({ data, index }) => {
 
 const SpotParkirComponent = ({ data }) => {
   return (
-    <Table striped bordered hover>
+    <Table style={{ backgroundColor: 'white' }} striped bordered hover>
       <thead>
         <tr>
           <th>No</th>
