@@ -15,12 +15,12 @@ const HomePenjagaParkir = () => {
       style={{
         margin: '0',
         position: 'absolute',
-        top: '45%',
+        top: '50%',
         left: '50%',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
         backgroundColor: 'unset',
-        maxHeight: '200px',
+        height: 'fit-content',
       }}
       className="login"
     >

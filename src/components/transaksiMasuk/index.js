@@ -77,15 +77,21 @@ const TransaksiMasuk = () => {
       memberService
         .viewMemberByNopol(nopol)
         .then((res) => {
-          setInfoMember(res[0]);
-          res[0].mobil.map((e) => {
-            if (e.nomor_polisi === nopol) {
-              setMobil(e);
-            }
-            return false;
-          });
-          setJamMasuk(`${getDate()} ${getTime()}`);
-          setStatus('ParkirMasuk');
+          if (res.length > 0) {
+            // console.log(nopol);
+            // console.log(res);
+            setInfoMember(res[0]);
+            res[0].mobil.map((e) => {
+              if (e.nomor_polisi === nopol) {
+                setMobil(e);
+              }
+              return false;
+            });
+            setJamMasuk(`${getDate()} ${getTime()}`);
+            setStatus('ParkirMasuk');
+          } else {
+            setError('Data tidak ditemukan');
+          }
         })
         .catch((err) => {
           setError(err);
@@ -111,8 +117,8 @@ const TransaksiMasuk = () => {
         padding: '20px',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeeight: '400px',
-        height: '250px',
+        // minHeight: '400px',
+        height: 'fit-content',
       }}
     >
       {error && (
@@ -147,7 +153,7 @@ const TransaksiMasuk = () => {
                       <Form.Label>Nomor Kendaraan</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="ex B 2397 CH"
+                        placeholder="ex. B 2397 CH"
                         value={loadingData ? 'Loading...' : nopol}
                         onChange={(e) => {
                           setNopol(e.target.value.toUpperCase());
@@ -182,7 +188,9 @@ const TransaksiMasuk = () => {
                       Some quick example text to build on the card title and
                       make up the bulk of the cards content.
                     </Card.Text>
-                    <Card.Text>{`${mobil.jenis_mobil} - ${nopol}`}</Card.Text>
+                    <Card.Text>
+                      {mobil && `${mobil.jenis_mobil} - ${nopol}`}
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
