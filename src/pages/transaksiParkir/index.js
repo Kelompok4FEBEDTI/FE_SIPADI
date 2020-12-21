@@ -7,12 +7,12 @@ import {
   FormControl,
   Alert,
   Card,
+  Pagination,
 } from 'react-bootstrap';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { TableTransaksi, Loading } from '../../components';
 import { transaksiParkirService, memberService } from '../../services';
-import './style.css';
 
 const JudulTransaksi = (props) => {
   const { totalData } = props;
@@ -23,18 +23,18 @@ const JudulTransaksi = (props) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: '5px',
+        margin: '20px',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <p style={{ marginTop: '8px', marginLeft: '50px', color: 'green' }}>
-          {`Total Data ${totalData}`}
-        </p>
-      </div>
       <div>
         <Link to="/homepenjagaparkir" className="btn btn-info">
           Add Transaksi
         </Link>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <p style={{ marginTop: '8px', marginLeft: '50px', color: 'green' }}>
+          {`Total Data ${totalData}`}
+        </p>
       </div>
     </div>
   );
@@ -60,7 +60,7 @@ const Search = () => {
             setMember(res);
           })
           .catch((err) => {
-            setError(err);
+            setError(err.message);
           });
       })
       .catch((err) => {
@@ -125,106 +125,82 @@ const TransaksiParkir = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [activeTab, setActiveTab] = useState('1');
-
-  const [totalData, setTotalData] = useState('');
+  const [jenis, setJenis] = useState('All');
+  const [totalData, setTotalData] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState('');
+  const [limit, setLimit] = useState(10);
+  const [active, setActive] = useState();
+  const [totalPage, setTotalPage] = useState();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const renderItems = [];
+
+  for (let number = 0; number < totalPage; number += 1) {
+    renderItems.push(
+      <Pagination.Item
+        onClick={() => {
+          setOffset(number * 10);
+          setLimit(number * 10 + 10);
+          setActive(number);
+        }}
+        key={number}
+        active={number === active}
+      >
+        {number + 1}
+      </Pagination.Item>
+    );
+  }
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  const fetchDataTransaksiAll = () => {
-    setLoading(true);
-    transaksiParkirService
-      .getTransaksiParkir(offset, limit)
-      .then((res) => {
-        setDataTransaksi(res.data);
-        setTotalData(res.total);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const fetchDataTransaksiMasuk = () => {
-    setLoading(true);
-    transaksiParkirService
-      .getTransaksiParkir(offset, limit, 'ParkirMasuk')
-      .then((res) => {
-        setDataTransaksi(res.data);
-        setTotalData(res.total);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const fetchDataTransaksiKeluar = () => {
-    setLoading(true);
-    transaksiParkirService
-      .getTransaksiParkir(offset, limit, 'ParkirKeluar')
-      .then((res) => {
-        setDataTransaksi(res.data);
-        setTotalData(res.total);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   useEffect(() => {
+    const fetchAPI = () => {
+      transaksiParkirService
+        .getTransaksiParkir(offset, limit, jenis)
+        .then((res) => {
+          for (let number = 0; number <= totalPage; number += 1) {
+            renderItems.push({ index: number });
+          }
+          setDataTransaksi(res.data);
+          setTotalData(res.total);
+          const total = Math.floor(res.total / 10);
+          setTotalPage(total);
+        })
+        .catch((err) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
     setLoading(true);
-    transaksiParkirService
-      .getTransaksiParkir(offset, limit)
-      .then((res) => {
-        setDataTransaksi(res.data);
-        setTotalData(res.total);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [dataTransaksi, limit, offset]);
+    fetchAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jenis, offset]);
 
-  // const handlePageClick = (e) => {
-  //   const selectedPage = e.selected;
-  //   setOffset(selectedPage * limit);
-  //   if (dataTransaksi[0].jenis === 'ParkirMasuk') {
-  //     fetchDataTransaksiMasuk(offset, limit);
-  //   } else if (dataTransaksi[0].jenis === 'ParkirKeluar') {
-  //     fetchDataTransaksiKeluar(offset, limit);
-  //   } else {
-  //     fetchDataTransaksiAll(offset, limit);
-  //   }
-  // };
+  const handlePage = (tab, jenisTransaksi) => {
+    setOffset(0);
+    setLimit(10);
+    setJenis(jenisTransaksi);
+    toggle(tab);
+    setDataTransaksi('');
+  };
 
   return (
     <div>
-      <Container style={{ marginTop: '8px', padding: '20px', paddingTop: '0' }}>
+      <Container style={{ marginTop: '8px', padding: '20px' }}>
         <JudulTransaksi totalData={totalData} />
-        <Search />
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Search />
+        </div>
         <div style={{ fontSize: '15px' }}>
           <Nav tabs>
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === '1' })}
                 onClick={() => {
-                  setOffset(0);
-                  setLimit(10);
-                  toggle('1');
-                  fetchDataTransaksiAll();
+                  return handlePage('1', 'All');
                 }}
               >
                 All Transaksi
@@ -234,10 +210,7 @@ const TransaksiParkir = () => {
               <NavLink
                 className={classnames({ active: activeTab === '2' })}
                 onClick={() => {
-                  setOffset(0);
-                  setLimit(10);
-                  toggle('2');
-                  fetchDataTransaksiMasuk();
+                  return handlePage('2', 'ParkirMasuk');
                 }}
               >
                 Parkir Masuk
@@ -247,10 +220,7 @@ const TransaksiParkir = () => {
               <NavLink
                 className={classnames({ active: activeTab === '3' })}
                 onClick={() => {
-                  setOffset(0);
-                  setLimit(10);
-                  toggle('3');
-                  fetchDataTransaksiKeluar();
+                  return handlePage('3', 'ParkirKeluar');
                 }}
               >
                 Parkir Keluar
@@ -276,19 +246,53 @@ const TransaksiParkir = () => {
             </TabContent>
           )}
         </div>
-        {/* <ReactPaginate
-          previousLabel="<<<"
-          nextLabel=">>>"
-          breakLabel="..."
-          breakClassName="breakme"
-          pageCount={pageCount}
-          marginPageDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName="pagination"
-          subContainerClassName="pages pagination"
-          activeClassName="active"
-        /> */}
+        {renderItems && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              margin: '20px',
+            }}
+          >
+            <Pagination>
+              <Pagination.First
+                onClick={() => {
+                  setOffset(0);
+                  setLimit(10);
+                  setActive(0);
+                }}
+              />
+              <Pagination.Prev
+                onClick={() => {
+                  // eslint-disable-next-line eqeqeq
+                  if (active != 0) {
+                    setActive(active - 1);
+                    setOffset((active - 1) * 10);
+                    setLimit((active - 1) * 10 + 10);
+                  }
+                }}
+              />
+              {renderItems}
+              <Pagination.Next
+                onClick={() => {
+                  // eslint-disable-next-line eqeqeq
+                  if (active != totalPage) {
+                    setActive(active + 1);
+                    setOffset((active + 1) * 10);
+                    setLimit((active + 1) * 10 + 10);
+                  }
+                }}
+              />
+              <Pagination.Last
+                onClick={() => {
+                  setOffset(totalPage);
+                  setLimit(totalPage + 10);
+                  setActive(totalPage);
+                }}
+              />
+            </Pagination>
+          </div>
+        )}
       </Container>
     </div>
   );

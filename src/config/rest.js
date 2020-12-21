@@ -5,6 +5,9 @@ export default {
   SHOW_SPOT_PARKIR: '/spotparkir',
   TRANSAKSI_PARKIR: (offset, limit, jenis) => {
     let endpoint = '/transaksi';
+    if (jenis === 'All') {
+      return `${endpoint}?offset=${offset}&limit=${limit}`;
+    }
     if (jenis && limit) {
       endpoint += `?jenis=${jenis}&offset=${offset}&limit=${limit}`;
     } else if (offset) {
