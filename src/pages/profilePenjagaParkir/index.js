@@ -28,6 +28,7 @@ const ProfileMember = () => {
       .finally(() => {
         setLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -37,7 +38,6 @@ const ProfileMember = () => {
         textAlign: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        border: '1px solid darkgray',
         margin: '0',
         position: 'absolute',
         maxWidth: '500px',

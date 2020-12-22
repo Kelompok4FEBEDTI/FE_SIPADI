@@ -33,6 +33,10 @@ const getTransaksiParkirById = (id) => {
   return BaseService.get(API.TRANSAKSI_PARKIR_BY_ID(id));
 };
 
+const getTransaksiParkirByIdMember = (id) => {
+  return BaseService.get(API.TRANSAKSI_PARKIR_BY_ID_MEMBER(id));
+};
+
 const editTransaksiParkirByID = (
   id,
   idPenjaga,
@@ -66,6 +70,7 @@ export default {
   getTransaksiParkir,
   addTransaksiParkir,
   getTransaksiParkirById,
+  getTransaksiParkirByIdMember,
   editTransaksiParkirByID,
   deleteTransaksiParkirById,
 };

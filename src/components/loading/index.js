@@ -63,7 +63,7 @@ const Loading = () => {
         flexDirection: 'column',
       }}
     >
-      <lottie-player
+      {/* <lottie-player
         src="https://assets1.lottiefiles.com/packages/lf20_mdbdc5l7.json"
         background="transparent"
         speed="1"
@@ -71,8 +71,15 @@ const Loading = () => {
         loop
         // controls
         autoplay
+      /> */}
+      <lottie-player
+        src="https://assets6.lottiefiles.com/packages/lf20_ttzb2nok.json"
+        background="transparent"
+        speed="1"
+        style={{ width: '300px', height: '300px' }}
+        loop
+        autoplay
       />
-      <p>Mohon menunggu...</p>
     </div>
   );
 };

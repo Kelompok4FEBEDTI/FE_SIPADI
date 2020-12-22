@@ -21,6 +21,9 @@ export default {
   TRANSAKSI_PARKIR_BY_ID: (id) => {
     return `/transaksi/${id}`;
   },
+  TRANSAKSI_PARKIR_BY_ID_MEMBER: (id) => {
+    return `/transaksi/memberHistory/${id}`;
+  },
   MEMBER: '/member',
   MEMBER_BY_ID: (id) => {
     return `/member/${id}`;

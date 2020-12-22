@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
-import { Container, Table, Button, Row, Col } from 'react-bootstrap';
+import { Container, Table, Button, Row, Col, Alert } from 'react-bootstrap';
 import { Avatar } from 'antd';
 import 'antd/dist/antd.css';
 import { UserOutlined } from '@ant-design/icons';
@@ -47,13 +47,16 @@ const ProfileMember = () => {
       });
   };
 
+  const hideError = () => {
+    setError(false);
+  };
+
   return (
     <Container
       style={{
         display: 'flex',
         textAlign: 'center',
         flexDirection: 'column',
-        border: '1px solid darkgray',
         margin: '0',
         position: 'absolute',
         maxWidth: '500px',
@@ -61,10 +64,23 @@ const ProfileMember = () => {
         left: '50%',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
+        borderRadius: '10px',
       }}
     >
-      {error && <p>{error}</p>}
-      {pesan && <p>{pesan}</p>}
+      {error && (
+        <div style={{ margin: '20px' }}>
+          <Alert onClick={hideError} variant="danger">
+            {error}
+          </Alert>
+        </div>
+      )}
+      {pesan && (
+        <div style={{ margin: '20px' }}>
+          <Alert onClick={hideError} variant="danger">
+            {pesan}
+          </Alert>
+        </div>
+      )}
       {dataMember && !loading ? (
         <div
           style={{

@@ -2,14 +2,21 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 
 const ListTransaksi = ({ data, index }) => {
+  const masuk = new Date(data.jam_masuk);
+  const keluar = new Date(data.jam_keluar);
+  const menitMasuk = masuk.getUTCMinutes();
+  const menitKeluar = keluar.getUTCMinutes();
+  const jamMasuk = `${masuk.getUTCHours()}.${menitMasuk}`;
+  const jamKeluar = `${keluar.getUTCHours()}.${menitKeluar}`;
+
   return (
     <tr>
       <td>{index + 1}</td>
       <td>{data.nomor_polisi}</td>
       <td>{data.jenis_mobil}</td>
       <td>{data.spot_parkir}</td>
-      <td>{data.jam_masuk}</td>
-      <td>{data.jam_keluar}</td>
+      <td>{jamMasuk}</td>
+      <td>{jamKeluar}</td>
       <td>{data.tarif}</td>
       <td>{data.status_parkir}</td>
     </tr>

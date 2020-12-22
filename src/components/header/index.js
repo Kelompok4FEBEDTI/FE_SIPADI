@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 // import { Navbar, Nav } from 'react-bootstrap';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
+import { Navbar, Nav, Container, NavItem, NavLink } from 'reactstrap';
 import { isUserAuthenticated, setCookie } from '../../utils/cookie';
 import { Logo } from '../../assets';
 import './style.css';
@@ -23,18 +16,7 @@ const Logout = () => {
 
   return (
     <>
-      <button
-        style={{
-          position: 'absolute',
-          right: '0',
-          marginRight: '10px',
-          top: '0',
-          marginTop: '6px',
-        }}
-        onClick={hapusCookie}
-        type="button"
-        className="btn btn-danger"
-      >
+      <button onClick={hapusCookie} type="button" className="btn btn-danger">
         Logout
       </button>
     </>
@@ -51,11 +33,6 @@ const Login = () => {
 
 const Header = ({ isPenjaga, show }) => {
   const listMenuMember = ['Profile Member', 'My History', 'Spot Parkir'];
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    return setIsOpen(!isOpen);
-  };
 
   const listMenuPenjaga = [
     'Home Penjaga Parkir',
@@ -63,10 +40,6 @@ const Header = ({ isPenjaga, show }) => {
     'Spot Parkir',
     'Profile Penjaga Parkir',
   ];
-
-  useEffect(() => {
-    // console.log(isPenjaga);
-  });
 
   const RenderedA = ({ list }) => {
     return list.map((name) => {
@@ -96,22 +69,30 @@ const Header = ({ isPenjaga, show }) => {
   const RenderNavbar = () => {
     return (
       <Navbar style={{ backgroundColor: 'white' }} color="white" expand="md">
-        <Link to={isPenjaga ? '/homepenjagaparkir' : '/profilemember'}>
-          <img style={{ width: '130px' }} alt="brand" src={Logo} />
-        </Link>
-        <NavbarToggler onClick={toggle} />
-        <Collapse
-          isOpen={isOpen}
-          navbar
-          style={{ position: 'absolute', right: '0', marginRight: '120px' }}
+        <Container
+          style={{
+            display: 'flex',
+            justifyContent: 'spacebeetwen',
+          }}
         >
-          <Nav className="mr-auto" navbar>
-            <RenderedA
-              list={isPenjaga !== true ? listMenuMember : listMenuPenjaga}
-            />
-          </Nav>
-        </Collapse>
-        <div>{isUserAuthenticated() ? <Logout /> : <Login />}</div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}
+          >
+            <Link to={isPenjaga ? '/homepenjagaparkir' : '/profilemember'}>
+              <img style={{ width: '130px' }} alt="brand" src={Logo} />
+            </Link>
+            <Nav className="mr-auto" navbar style={{ marginLeft: '20px' }}>
+              <RenderedA
+                list={isPenjaga !== true ? listMenuMember : listMenuPenjaga}
+              />
+            </Nav>
+          </div>
+          <div>{isUserAuthenticated() ? <Logout /> : <Login />}</div>
+        </Container>
       </Navbar>
     );
   };

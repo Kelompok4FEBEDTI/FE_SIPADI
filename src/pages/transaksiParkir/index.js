@@ -72,6 +72,9 @@ const Search = () => {
       });
     e.preventDefault();
   };
+  const hideError = () => {
+    setError(false);
+  };
 
   return (
     <div style={{ marginTop: '-8px' }}>
@@ -90,7 +93,13 @@ const Search = () => {
         </Button>
       </Form>
       {loading && <Loading />}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && (
+        <div style={{ margin: '20px' }}>
+          <Alert onClick={hideError} variant="danger">
+            {error}
+          </Alert>
+        </div>
+      )}
       {data && (
         <div>
           <Card style={{ margin: '20px 0' }}>
@@ -189,12 +198,26 @@ const TransaksiParkir = () => {
 
   return (
     <div>
-      <Container style={{ marginTop: '8px', padding: '20px' }}>
+      <Container
+        style={{
+          borderRadius: '10px',
+          marginTop: '40px',
+          padding: '20px',
+        }}
+      >
         <JudulTransaksi totalData={totalData} />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Search />
         </div>
-        <div style={{ fontSize: '15px' }}>
+        <div
+          style={{
+            background: 'white',
+            margin: '20px 0',
+            padding: '0 20px',
+            fontSize: '12px',
+            borderRadius: '20px',
+          }}
+        >
           <Nav tabs>
             <NavItem>
               <NavLink
@@ -228,7 +251,14 @@ const TransaksiParkir = () => {
             </NavItem>
           </Nav>
           {loading ? (
-            <div style={{ margin: '40px', jsutifyContent: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                margin: '40px',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
               {error && <Alert variant="danger">{error}</Alert>}
               {loading && <Loading />}
             </div>
@@ -245,54 +275,53 @@ const TransaksiParkir = () => {
               </TabPane>
             </TabContent>
           )}
+          {renderItems && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Pagination>
+                <Pagination.First
+                  onClick={() => {
+                    setOffset(0);
+                    setLimit(10);
+                    setActive(0);
+                  }}
+                />
+                <Pagination.Prev
+                  onClick={() => {
+                    // eslint-disable-next-line eqeqeq
+                    if (active != 0) {
+                      setActive(active - 1);
+                      setOffset((active - 1) * 10);
+                      setLimit((active - 1) * 10 + 10);
+                    }
+                  }}
+                />
+                {renderItems}
+                <Pagination.Next
+                  onClick={() => {
+                    // eslint-disable-next-line eqeqeq
+                    if (active != totalPage) {
+                      setActive(active + 1);
+                      setOffset((active + 1) * 10);
+                      setLimit((active + 1) * 10 + 10);
+                    }
+                  }}
+                />
+                <Pagination.Last
+                  onClick={() => {
+                    setOffset(totalPage);
+                    setLimit(totalPage + 10);
+                    setActive(totalPage);
+                  }}
+                />
+              </Pagination>
+            </div>
+          )}
         </div>
-        {renderItems && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              margin: '20px',
-            }}
-          >
-            <Pagination>
-              <Pagination.First
-                onClick={() => {
-                  setOffset(0);
-                  setLimit(10);
-                  setActive(0);
-                }}
-              />
-              <Pagination.Prev
-                onClick={() => {
-                  // eslint-disable-next-line eqeqeq
-                  if (active != 0) {
-                    setActive(active - 1);
-                    setOffset((active - 1) * 10);
-                    setLimit((active - 1) * 10 + 10);
-                  }
-                }}
-              />
-              {renderItems}
-              <Pagination.Next
-                onClick={() => {
-                  // eslint-disable-next-line eqeqeq
-                  if (active != totalPage) {
-                    setActive(active + 1);
-                    setOffset((active + 1) * 10);
-                    setLimit((active + 1) * 10 + 10);
-                  }
-                }}
-              />
-              <Pagination.Last
-                onClick={() => {
-                  setOffset(totalPage);
-                  setLimit(totalPage + 10);
-                  setActive(totalPage);
-                }}
-              />
-            </Pagination>
-          </div>
-        )}
       </Container>
     </div>
   );
